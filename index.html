@@ -9,9 +9,8 @@
 :root{
 --pink:#ff5aa5;
 --pink2:#ff8fc2;
---bg1:#ffe8f2;
---bg2:#ffd3e6;
---radius:28px;
+--bg1:#ffd9ec;
+--bg2:#ffc2e2;
 }
 
 body{
@@ -51,7 +50,7 @@ border-radius:32px;
 text-align:center;
 max-width:420px;
 width:95%;
-box-shadow:0 20px 40px rgba(255,90,165,.2);
+box-shadow:0 20px 40px rgba(255,90,165,.25);
 }
 
 button{
@@ -125,7 +124,7 @@ to{transform:translateY(-10vh)}
 
 <div class="bg" id="bg"></div>
 
-<audio id="pop">
+<audio id="pop" preload="auto">
 <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=">
 </audio>
 
@@ -134,15 +133,15 @@ to{transform:translateY(-10vh)}
 <div class="card">
 <h1>أهلاً بك في عالم دلوعتي 🎀</h1>
 <p>بدأت الحكاية بـ 03.02</p>
-<button onclick="go('verify')">البداية هون 👇</button>
+<button onclick="playPop(); go('verify')">البداية هون 👇</button>
 </div>
 </div>
 
 <!-- Verify -->
 <div class="page" id="verify">
 <div class="card">
-<h2>قبل ما نبدأ لازم أتأكد من هويتك 😼</h2>
-<button onclick="go('q1')">اضغطي هون لحتى تجاوبي على الأسئلة</button>
+<h2>قبل ما نبدأ لازم أتأكد من هويتك</h2>
+<button onclick="playPop(); go('q1')">اضغطي هون لحتى تجاوبي على الأسئلة</button>
 </div>
 </div>
 
@@ -151,7 +150,7 @@ to{transform:translateY(-10vh)}
 <div class="card" id="card1">
 <h2>شو أكتر اسم بحب ناديكي فيه؟</h2>
 <input id="a1">
-<button onclick="checkQ1()">تأكيد</button>
+<button onclick="playPop(); checkQ1()">تأكيد</button>
 <p id="m1"></p>
 </div>
 </div>
@@ -159,10 +158,10 @@ to{transform:translateY(-10vh)}
 <!-- Q2 -->
 <div class="page" id="q2">
 <div class="card" id="card2">
-<h2>لما أقلك بحبك شو بتردي عليّ؟ 😼</h2>
-<button onclick="checkQ2('احبك كثير')">احبك كثير</button>
-<button onclick="checkQ2('ما احبك')">ما احبك</button>
-<button onclick="checkQ2('اكرهك')">اكرهك</button>
+<h2>لما أقلك بحبك شو بتردي عليّ؟</h2>
+<button onclick="playPop(); checkQ2('احبك كثير')">احبك كثير</button>
+<button onclick="playPop(); checkQ2('ما احبك')">ما احبك</button>
+<button onclick="playPop(); checkQ2('اكرهك')">اكرهك</button>
 <p id="m2"></p>
 </div>
 </div>
@@ -170,92 +169,46 @@ to{transform:translateY(-10vh)}
 <!-- Q3 -->
 <div class="page" id="q3">
 <div class="card" id="card3">
-<h2>اختاري أكثر 3 كلمات بتقوليهم </h2>
-<div> 
-<label><input type="checkbox" value="احبك"> احبك</label><br>
-<label><input type="checkbox" value="نعسانه"> نعسانه</label><br>
-<label><input type="checkbox" value="اعشقك"> اعشقك</label><br> 
-<label><input type="checkbox" value="جوعانة"> جوعانة</label><br>
-<label><input type="checkbox" value="مشتاقتلك"> مشتاقتلك</label> 
-<label><input type="checkbox" value="ضهري يوجعني"> ضهري يوجعني</label><br>
-</div>
-<button onclick="checkQ3()">تأكيد</button>
+<h2>اختاري أكثر 3 كلمات بتقوليهم</h2>
+<div id="q3Options"></div>
+<button onclick="playPop(); checkQ3()">تأكيد</button>
 <p id="m3"></p>
 </div>
 </div>
 
-<!-- Celebration -->
-<div class="page" id="celebrate">
-<div class="card">
-<h1>صح 😼✨</h1>
-<p>انتي فعلاً أمينة 🎀</p>
-</div>
-</div>
-
-<!-- Countdown -->
-<div class="page" id="count">
-<div class="card">
-<h2 style="font-weight:bold">بعد هاذ الوقت رح نشوف بعض 💕</h2>
-<div id="timer"></div>
-</div>
-<div class="next">
-<button onclick="go('secret')">NEXT →</button>
-</div>
-</div>
-
-<!-- Secret Box -->
-<div class="page" id="secret">
-<div class="card">
-<h2>🎁 اضغطي لتعرفي سر</h2>
-<button onclick="document.getElementById('secretText').style.display='block'">افتحي</button>
-<div id="secretText" class="hidden">
-منوشتي 🎀<br>
-وجودك بحياتي هو احلى شي صارلي 💕<br> 
-احبك اكثر من كلشي بهلعالم <br> 
-وأنا مبسوط فيكي كتير ✨
-</div>
-</div>
-<div class="next">
-<button onclick="go('mem')">NEXT →</button>
-</div>
-</div>
-
-<!-- Memories -->
-<div class="page" id="mem">
-<div class="card">
-<h2>ذكريات حلوة 💖</h2>
-<div class="mem-grid">
-<div class="mem">🎀</div>
-<div class="mem">🧸</div>
-<div class="mem">🍫</div>
-<div class="mem">🌸</div>
-<div class="mem">😻</div>
-<div class="mem">🎁</div>
-</div>
-</div>
-<div class="next">
-<button onclick="go('hidden')">NEXT →</button>
-</div>
-</div>
-
-<!-- Hidden -->
-<div class="page" id="hidden">
-<div class="card">
-<h2>🔐 السر الكبير</h2>
-<input id="finalPwd">
-<button onclick="checkFinal()">تأكيد</button>
-<p id="finalMsg"></p>
-<p id="tries"></p>
-<div id="finalSuccess" class="hidden">
-احبك 💗<br>
-بس لسا المفاجأة ما خلصت…<br>
-ما توقعت أبداً إنك تعرفي كلمة السر بهالمدة القصيرة 😼✨
-</div>
-</div>
-</div>
-
 <script>
-// background hearts
+const options=[
+"احبك",
+"نعسانه",
+"اعشقك",
+"جوعانة",
+"مشتاقتلك",
+"ضهري عم يوجعني"
+];
+
+function shuffle(array){
+return array.sort(()=>Math.random()-0.5);
+}
+
+function loadQ3(){
+const container=document.getElementById("q3Options");
+container.innerHTML="";
+shuffle(options).forEach(opt=>{
+let label=document.createElement("label");
+label.innerHTML=`<input type="checkbox" value="${opt}"> ${opt}`;
+container.appendChild(label);
+container.appendChild(document.createElement("br"));
+});
+}
+
+loadQ3();
+
+function playPop(){
+let p=document.getElementById("pop");
+p.currentTime=0;
+p.play().catch(()=>{});
+}
+
 for(let i=0;i<25;i++){
 let s=document.createElement('span');
 s.innerHTML='💖';
@@ -275,81 +228,34 @@ p.classList.add('left');
 let next=document.getElementById(id);
 next.classList.remove('left');
 next.classList.add('active');
+if(id==='q3'){loadQ3();}
 }
 
 function checkQ1(){
 if(document.getElementById('a1').value.trim()==='منوشتي'){
 go('q2');
-}else{
-shake('card1');
-}
+}else{shake('card1');}
 }
 
 function checkQ2(val){
 if(val==='اكرهك'){
 go('q3');
-}else{
-shake('card2');
-}
+}else{shake('card2');}
 }
 
 function checkQ3(){
-let checked=[...document.querySelectorAll('#q3 input:checked')].map(i=>i.value);
+let checked=[...document.querySelectorAll('#q3Options input:checked')].map(i=>i.value);
 if(checked.length!==3){shake('card3');return;}
 let correct=['جوعانة','ضهري عم يوجعني','نعسانه'];
 if(correct.every(v=>checked.includes(v))){
 go('celebrate');
-setTimeout(()=>go('count'),1500);
-}else{
-shake('card3');
-}
+}else{shake('card3');}
 }
 
 function shake(id){
 let el=document.getElementById(id);
 el.classList.add('shake');
 setTimeout(()=>el.classList.remove('shake'),300);
-}
-
-// countdown
-let target=new Date(2026,6,20).getTime();
-setInterval(()=>{
-let now=Date.now();
-let diff=target-now;
-let d=Math.floor(diff/(1000*60*60*24));
-let h=Math.floor((diff/(1000*60*60))%24);
-let m=Math.floor((diff/(1000*60))%60);
-let s=Math.floor((diff/1000)%60);
-document.getElementById('timer').innerHTML=d+" يوم | "+h+" ساعة | "+m+" دقيقة | "+s+" ثانية";
-},1000);
-
-// final secret
-function todayKey(){
-let d=new Date();
-return "tries-"+d.toDateString();
-}
-
-function getTries(){
-return parseInt(localStorage.getItem(todayKey())||"0");
-}
-
-function setTries(n){
-localStorage.setItem(todayKey(),n);
-}
-
-function checkFinal(){
-let tries=getTries();
-if(tries>=5){
-document.getElementById('finalMsg').innerText="خلصت محاولات اليوم 😼 جربي بكرا";
-return;
-}
-if(document.getElementById('finalPwd').value.trim()==='ام ولادي'){
-document.getElementById('finalSuccess').style.display='block';
-}else{
-setTries(tries+1);
-document.getElementById('finalMsg').innerText="مو صح 😼";
-document.getElementById('tries').innerText="المتبقي: "+(5-getTries());
-}
 }
 </script>
 
