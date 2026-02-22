@@ -123,6 +123,32 @@ input{
   75%{transform:translateX(6px)}
   100%{transform:translateX(0)}
 }
+  .mem{
+  overflow:hidden;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  color:var(--pink);
+}
+
+.mem img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:18px;
+  transition:.3s;
+}
+
+.mem:active img{
+  transform:scale(1.08);
+}
+
+.mem.empty{
+  background:rgba(255,255,255,.5);
+  border:2px dashed var(--pink2);
+}
 
 /* Floating hearts/stars/glitter */
 .bg span{
