@@ -280,15 +280,31 @@ input{
 <div class="page" id="mem">
   <div class="card">
     <h2>ذكريات حلوة 💖</h2>
+
     <div class="mem-grid">
-      <div class="mem" onclick="playPop()">🎀</div>
-      <div class="mem" onclick="playPop()">🧸</div>
-      <div class="mem" onclick="playPop()">🍫</div>
-      <div class="mem" onclick="playPop()">🌸</div>
-      <div class="mem" onclick="playPop()">😻</div>
-      <div class="mem" onclick="playPop()">🎁</div>
+
+      <!-- الصور الحالية -->
+      <div class="mem" onclick="playPop()">
+        <img src="1.jpeg" alt="">
+      </div>
+
+      <div class="mem" onclick="playPop()">
+        <img src="2.jpeg" alt="">
+      </div>
+
+      <div class="mem" onclick="playPop()">
+        <img src="3.jpeg" alt="">
+      </div>
+
+      <!-- أماكن للصور القادمة -->
+      <div class="mem empty">قريباً 💕</div>
+      <div class="mem empty">قريباً 💕</div>
+      <div class="mem empty">قريباً 💕</div>
+
     </div>
+
   </div>
+
   <div class="next">
     <button onclick="playPop(); go('hidden')">NEXT →</button>
   </div>
