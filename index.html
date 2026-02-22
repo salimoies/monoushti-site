@@ -1,648 +1,356 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-  <title>عالم دلوعتي 🎀</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عالم دلوعتي 🎀</title>
 
-  <style>
-    :root{
-      --bg1:#ffe8f2;
-      --bg2:#ffd3e6;
-      --pink:#ff5aa5;
-      --pink2:#ff86be;
-      --white:#ffffff;
-      --shadow: 0 18px 40px rgba(255, 90, 165, .18);
-      --shadow2: 0 10px 24px rgba(0,0,0,.08);
-      --radius: 28px;
-    }
+<style>
+:root{
+--pink:#ff5aa5;
+--pink2:#ff8fc2;
+--bg1:#ffe8f2;
+--bg2:#ffd3e6;
+--radius:28px;
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-      color:#7a1d4f;
-      background: radial-gradient(circle at 15% 20%, rgba(255,255,255,.75) 0 18%, transparent 40%),
-                  radial-gradient(circle at 85% 80%, rgba(255,255,255,.65) 0 18%, transparent 40%),
-                  linear-gradient(135deg,var(--bg1),var(--bg2));
-      overflow:hidden;
-      -webkit-tap-highlight-color: transparent;
-    }
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,var(--bg1),var(--bg2));
+overflow:hidden;
+color:#7a1d4f;
+}
 
-    /* --- lightweight glitter/hearts/stars --- */
-    .bg{
-      position:fixed; inset:0;
-      overflow:hidden;
-      pointer-events:none;
-      z-index:0;
-    }
-    .spark{
-      position:absolute;
-      opacity:.55;
-      animation: rise linear infinite;
-      filter: drop-shadow(0 6px 10px rgba(255,90,165,.22));
-      will-change: transform;
-    }
-    @keyframes rise{
-      from{ transform: translate3d(0, 110vh, 0) rotate(0deg); }
-      to  { transform: translate3d(0,-20vh, 0) rotate(360deg); }
-    }
+.page{
+position:absolute;
+inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+transition:.6s;
+transform:translateX(120%);
+opacity:0;
+padding:20px;
+}
 
-    /* --- app pages --- */
-    .page{
-      position:absolute; inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px 16px;
-      z-index:1;
-      transform: translateX(110%);
-      opacity:0;
-      transition: transform .55s cubic-bezier(.2,.9,.2,1), opacity .45s ease;
-    }
-    .page.active{ transform: translateX(0); opacity:1; }
-    .page.left{ transform: translateX(-110%); opacity:0; }
+.page.active{
+transform:translateX(0);
+opacity:1;
+}
 
-    .card{
-      width:min(420px, 92vw);
-      background: rgba(255,255,255,.78);
-      border: 3px solid rgba(255, 134, 190, .45);
-      backdrop-filter: blur(10px);
-      border-radius: calc(var(--radius) + 8px);
-      box-shadow: var(--shadow);
-      padding: 22px 18px;
-      text-align:center;
-      position:relative;
-      overflow:hidden;
-    }
-    .card:before{
-      content:"";
-      position:absolute; inset:-60px -80px auto auto;
-      width:220px; height:220px;
-      background: radial-gradient(circle, rgba(255,134,190,.35), transparent 60%);
-      transform: rotate(25deg);
-    }
+.page.left{
+transform:translateX(-120%);
+opacity:0;
+}
 
-    h1{
-      margin:14px 0 8px;
-      font-size: clamp(28px, 6vw, 44px);
-      color: var(--pink);
-      letter-spacing:.2px;
-      line-height:1.15;
-      text-shadow: 0 10px 20px rgba(255,90,165,.15);
-    }
-    p{
-      margin: 0 0 14px;
-      color: rgba(122,29,79,.72);
-      font-size: 16px;
-    }
-    .tiny{
-      font-size: 13px;
-      color: rgba(122,29,79,.55);
-      margin-top: 8px;
-    }
+.card{
+background:white;
+padding:25px;
+border-radius:32px;
+text-align:center;
+max-width:420px;
+width:95%;
+box-shadow:0 20px 40px rgba(255,90,165,.2);
+}
 
-    .btn{
-      border:0;
-      cursor:pointer;
-      user-select:none;
-      padding: 14px 20px;
-      border-radius: 999px;
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--white);
-      background: linear-gradient(90deg, var(--pink2), var(--pink));
-      box-shadow: 0 14px 24px rgba(255, 90, 165, .22);
-      border: 3px solid rgba(255,255,255,.85);
-      transition: transform .12s ease, filter .2s ease;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      min-width: 190px;
-    }
-    .btn:active{ transform: scale(.98); filter:saturate(1.05); }
+button{
+padding:12px 20px;
+border-radius:30px;
+border:none;
+cursor:pointer;
+background:linear-gradient(90deg,var(--pink2),var(--pink));
+color:white;
+font-weight:bold;
+margin-top:12px;
+}
 
-    .btn-ghost{
-      background: rgba(255,255,255,.88);
-      color: var(--pink);
-      border: 2px solid rgba(255,134,190,.6);
-      box-shadow: var(--shadow2);
-      min-width: 140px;
-    }
+input{
+padding:10px;
+border-radius:20px;
+border:2px solid var(--pink2);
+width:80%;
+text-align:center;
+}
 
-    .input{
-      width: 100%;
-      max-width: 320px;
-      border-radius: 18px;
-      border: 2px solid rgba(255,134,190,.55);
-      padding: 14px 14px;
-      font-size: 16px;
-      text-align:center;
-      outline:none;
-      background: rgba(255,255,255,.9);
-      box-shadow: inset 0 6px 14px rgba(255,90,165,.08);
-    }
-    .input:focus{
-      border-color: rgba(255,90,165,.8);
-      box-shadow: 0 0 0 6px rgba(255,90,165,.12);
-    }
+.next{
+position:fixed;
+bottom:20px;
+left:20px;
+}
 
-    .row{display:flex; flex-direction:column; align-items:center; gap:12px}
-    .next{
-      position: fixed;
-      bottom: 18px;
-      left: 16px;
-      z-index: 2;
-    }
+.hidden{display:none;}
 
-    /* countdown */
-    .countWrap{
-      width:min(520px, 94vw);
-      background: rgba(255,255,255,.88);
-      border: 4px solid rgba(255,134,190,.65);
-      border-radius: 34px;
-      box-shadow: var(--shadow);
-      padding: 18px 16px 14px;
-    }
-    .timeGrid{
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      direction:ltr; /* numbers read nice */
-      margin-top: 10px;
-    }
-    .unit{
-      background: #fff;
-      border: 2px solid rgba(255,134,190,.45);
-      border-radius: 22px;
-      padding: 14px 10px;
-      box-shadow: inset 0 10px 18px rgba(255,90,165,.06);
-    }
-    .num{
-      font-size: 28px;
-      font-weight: 900;
-      color: var(--pink);
-      line-height:1;
-      display:inline-block;
-      transform: translateZ(0);
-      transition: transform .12s ease;
-    }
-    .num.bump{ transform: scale(1.05); }
-    .lab{
-      display:block;
-      margin-top: 8px;
-      font-size: 12px;
-      color: rgba(122,29,79,.55);
-      font-weight: 800;
-    }
+.mem-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-top:10px;
+}
 
-    /* secret box */
-    .gift{
-      width:min(380px, 92vw);
-      border-radius: 30px;
-      padding: 18px 16px;
-      background: linear-gradient(135deg, rgba(255,134,190,.95), rgba(255,90,165,.95));
-      color:#fff;
-      border: 3px solid rgba(255,255,255,.85);
-      box-shadow: var(--shadow);
-      cursor:pointer;
-      user-select:none;
-      transition: transform .15s ease;
-    }
-    .gift:active{ transform: scale(.985); }
-    .secretMsg{
-      margin-top: 14px;
-      background: rgba(255,255,255,.92);
-      border: 3px solid rgba(255,134,190,.55);
-      border-radius: 26px;
-      padding: 16px 14px;
-      color: var(--pink);
-      font-weight: 900;
-      line-height: 1.6;
-      display:none;
-    }
+.mem{
+background:white;
+border-radius:20px;
+padding:20px;
+cursor:pointer;
+font-size:24px;
+border:2px solid var(--pink2);
+}
 
-    /* memories */
-    .grid{
-      width:min(520px, 94vw);
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 8px;
-    }
-    .mem{
-      aspect-ratio: 1/1;
-      border-radius: 26px;
-      border: 3px solid rgba(255,255,255,.9);
-      box-shadow: var(--shadow2);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size: 34px;
-      cursor:pointer;
-      user-select:none;
-      position:relative;
-      overflow:hidden;
-      background: rgba(255,255,255,.85);
-      transition: transform .18s ease;
-    }
-    .mem:active{ transform: scale(.96); }
-    .mem.big{
-      position:fixed;
-      inset: 0;
-      margin:auto;
-      width:min(520px, 92vw);
-      height:min(360px, 58vh);
-      z-index: 5;
-      font-size: 58px;
-      border-radius: 34px;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-      padding: 18px;
-      justify-content:center;
-      background: rgba(255,255,255,.95);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 26px 60px rgba(0,0,0,.18);
-    }
-    .overlay{
-      display:none;
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.18);
-      z-index: 4;
-    }
-    .overlay.show{display:block;}
+.shake{
+animation:shake .3s;
+}
+@keyframes shake{
+0%{transform:translateX(0)}
+25%{transform:translateX(8px)}
+50%{transform:translateX(-8px)}
+75%{transform:translateX(6px)}
+100%{transform:translateX(0)}
+}
 
-    /* cute cat svg */
-    .cat{
-      width: 150px;
-      max-width: 46vw;
-      margin: 0 auto;
-      animation: floaty 3.2s ease-in-out infinite;
-      filter: drop-shadow(0 14px 18px rgba(255,90,165,.18));
-    }
-    @keyframes floaty{
-      0%,100%{ transform: translateY(0); }
-      50%{ transform: translateY(-10px); }
-    }
-
-    /* small shake for wrong answer */
-    @keyframes shake{
-      0%{transform: translateX(0)}
-      25%{transform: translateX(8px)}
-      50%{transform: translateX(-8px)}
-      75%{transform: translateX(6px)}
-      100%{transform: translateX(0)}
-    }
-    .shake{ animation: shake .35s ease; }
-
-    /* responsive tweaks */
-    @media (max-width: 420px){
-      .timeGrid{ gap:8px; }
-      .unit{ padding: 12px 8px; border-radius: 20px; }
-      .num{ font-size: 24px; }
-      .grid{ grid-template-columns: repeat(3, 1fr); gap:10px; }
-    }
-  </style>
+/* Floating hearts */
+.bg span{
+position:absolute;
+animation:float 8s linear infinite;
+opacity:.5;
+}
+@keyframes float{
+from{transform:translateY(100vh)}
+to{transform:translateY(-10vh)}
+}
+</style>
 </head>
+
 <body>
 
-  <!-- Background elements -->
-  <div class="bg" id="bg"></div>
+<div class="bg" id="bg"></div>
 
-  <!-- Overlay for memories modal -->
-  <div class="overlay" id="overlay"></div>
+<audio id="pop">
+<source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=">
+</audio>
 
-  <!-- Pop sound (tiny embedded beep) -->
-  <audio id="pop" preload="auto">
-    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=" type="audio/wav">
-  </audio>
+<!-- Welcome -->
+<div class="page active" id="welcome">
+<div class="card">
+<h1>أهلاً بك في عالم دلوعتي 🎀</h1>
+<p>بدأت الحكاية بـ 03.02</p>
+<button onclick="go('verify')">البداية هون 👇</button>
+</div>
+</div>
 
-  <!-- Page: Welcome -->
-  <section class="page active" id="p-welcome">
-    <div class="card">
-      <!-- Cute cat SVG (Hello-Kitty vibe without copyrighted character) -->
-      <svg class="cat" viewBox="0 0 200 200" aria-label="Cute Cat">
-        <!-- ears -->
-        <path d="M52 70 L35 35 L75 55 Z" fill="#fff" stroke="#ff8fc2" stroke-width="6" stroke-linejoin="round"/>
-        <path d="M148 70 L165 35 L125 55 Z" fill="#fff" stroke="#ff8fc2" stroke-width="6" stroke-linejoin="round"/>
-        <!-- head -->
-        <circle cx="100" cy="105" r="62" fill="#fff" stroke="#ff8fc2" stroke-width="6"/>
-        <!-- blush -->
-        <circle cx="68" cy="120" r="10" fill="#ffd1e6" opacity="0.9"/>
-        <circle cx="132" cy="120" r="10" fill="#ffd1e6" opacity="0.9"/>
-        <!-- eyes -->
-        <circle cx="78" cy="102" r="7" fill="#2b2b2b"/>
-        <circle cx="122" cy="102" r="7" fill="#2b2b2b"/>
-        <!-- nose -->
-        <ellipse cx="100" cy="118" rx="7" ry="5" fill="#ffb3d5"/>
-        <!-- mouth -->
-        <path d="M92 128 Q100 134 108 128" fill="none" stroke="#ff5aa5" stroke-width="5" stroke-linecap="round"/>
-        <!-- whiskers -->
-        <path d="M36 110 H60" stroke="#ff8fc2" stroke-width="5" stroke-linecap="round"/>
-        <path d="M140 110 H164" stroke="#ff8fc2" stroke-width="5" stroke-linecap="round"/>
-        <path d="M38 128 H62" stroke="#ff8fc2" stroke-width="5" stroke-linecap="round"/>
-        <path d="M138 128 H162" stroke="#ff8fc2" stroke-width="5" stroke-linecap="round"/>
-        <!-- bow -->
-        <g transform="translate(122 58)">
-          <circle cx="10" cy="10" r="9" fill="#ff5aa5"/>
-          <circle cx="34" cy="10" r="9" fill="#ff5aa5"/>
-          <circle cx="22" cy="10" r="6" fill="#ff86be"/>
-          <path d="M10 10 Q22 -2 34 10 Q22 22 10 10 Z" fill="#ff5aa5" opacity="0.95"/>
-        </g>
-      </svg>
+<!-- Verify -->
+<div class="page" id="verify">
+<div class="card">
+<h2>قبل ما نبدأ لازم أتأكد من هويتك 😼</h2>
+<button onclick="go('q1')">اضغطي هون لحتى تجاوبي على الأسئلة</button>
+</div>
+</div>
 
-      <h1>أهلاً بك في عالم دلوعتي 🎀</h1>
-      <p>بدأت الحكاية بـ 03.02</p>
+<!-- Q1 -->
+<div class="page" id="q1">
+<div class="card" id="card1">
+<h2>شو أكتر اسم بحب ناديكي فيه؟</h2>
+<input id="a1">
+<button onclick="checkQ1()">تأكيد</button>
+<p id="m1"></p>
+</div>
+</div>
 
-      <button class="btn" id="startBtn">البداية هون 👇</button>
-      <div class="tiny">كيوت + مفاجآت + سر مخبّى 😼✨</div>
-    </div>
-  </section>
+<!-- Q2 -->
+<div class="page" id="q2">
+<div class="card" id="card2">
+<h2>لما أقلك بحبك شو بتردي عليّ؟ 😼</h2>
+<button onclick="checkQ2('احبك كثير')">احبك كثير</button>
+<button onclick="checkQ2('ما احبك')">ما احبك</button>
+<button onclick="checkQ2('اكرهك')">اكرهك</button>
+<p id="m2"></p>
+</div>
+</div>
 
-  <!-- Page: Gate -->
-  <section class="page" id="p-gate">
-    <div class="card" id="gateCard">
-      <h1 style="font-size:30px;margin-top:6px">سؤال صغير 🫣</h1>
-      <p>شو أكتر اسم بحب ناديكي فيه؟</p>
+<!-- Q3 -->
+<div class="page" id="q3">
+<div class="card" id="card3">
+<h2>اختاري أكثر 3 كلمات بتقوليهم 😏</h2>
+<div>
+<label><input type="checkbox" value="جوعانة"> جوعانة</label><br>
+<label><input type="checkbox" value="ضهري عم يوجعني"> ضهري عم يوجعني</label><br>
+<label><input type="checkbox" value="نعسانه"> نعسانه</label><br>
+<label><input type="checkbox" value="احبك"> احبك</label><br>
+<label><input type="checkbox" value="اعشقك"> اعشقك</label><br>
+<label><input type="checkbox" value="مشتاقتلك"> مشتاقتلك</label>
+</div>
+<button onclick="checkQ3()">تأكيد</button>
+<p id="m3"></p>
+</div>
+</div>
 
-      <div class="row">
-        <input class="input" id="pwd" placeholder="اكتبي الجواب هون..." autocomplete="off" />
-        <button class="btn btn-ghost" id="checkBtn">تأكيد ✨</button>
-        <div id="msg" class="tiny" style="min-height:18px"></div>
-      </div>
+<!-- Celebration -->
+<div class="page" id="celebrate">
+<div class="card">
+<h1>صح 😼✨</h1>
+<p>انتي فعلاً أمينة 🎀</p>
+</div>
+</div>
 
-      <div class="tiny" id="hint" style="display:none;margin-top:10px">
-        💡 تلميح: الاسم فيه دلع كثير 🎀
-      </div>
-    </div>
-  </section>
+<!-- Countdown -->
+<div class="page" id="count">
+<div class="card">
+<h2 style="font-weight:bold">بعد هاذ الوقت رح نشوف بعض 💕</h2>
+<div id="timer"></div>
+</div>
+<div class="next">
+<button onclick="go('secret')">NEXT →</button>
+</div>
+</div>
 
-  <!-- Page: Countdown -->
-  <section class="page" id="p-count">
-    <div class="countWrap">
-      <h1 style="margin:0 0 6px;font-size:30px">⏳</h1>
-      <div class="timeGrid">
-        <div class="unit"><span class="num" id="d">00</span><span class="lab">DAYS</span></div>
-        <div class="unit"><span class="num" id="h">00</span><span class="lab">HOURS</span></div>
-        <div class="unit"><span class="num" id="m">00</span><span class="lab">MINS</span></div>
-        <div class="unit"><span class="num" id="s">00</span><span class="lab">SECS</span></div>
-      </div>
-    </div>
+<!-- Secret Box -->
+<div class="page" id="secret">
+<div class="card">
+<h2>🎁 اضغطي لتعرفي سر</h2>
+<button onclick="document.getElementById('secretText').style.display='block'">افتحي</button>
+<div id="secretText" class="hidden">
+منوشتي 🎀<br>
+وجودك معي مو عادي 💕<br>
+وأنا مبسوط فيكي كتير ✨
+</div>
+</div>
+<div class="next">
+<button onclick="go('mem')">NEXT →</button>
+</div>
+</div>
 
-    <div class="next">
-      <button class="btn btn-ghost" id="toSecret">NEXT →</button>
-    </div>
-  </section>
+<!-- Memories -->
+<div class="page" id="mem">
+<div class="card">
+<h2>ذكريات حلوة 💖</h2>
+<div class="mem-grid">
+<div class="mem">🎀</div>
+<div class="mem">🧸</div>
+<div class="mem">🍫</div>
+<div class="mem">🌸</div>
+<div class="mem">😻</div>
+<div class="mem">🎁</div>
+</div>
+</div>
+<div class="next">
+<button onclick="go('hidden')">NEXT →</button>
+</div>
+</div>
 
-  <!-- Page: Secret -->
-  <section class="page" id="p-secret">
-    <div class="card">
-      <div class="gift" id="gift">
-        🎁 اضغطي لتعرفي سر
-      </div>
+<!-- Hidden -->
+<div class="page" id="hidden">
+<div class="card">
+<h2>🔐 السر الكبير</h2>
+<input id="finalPwd">
+<button onclick="checkFinal()">تأكيد</button>
+<p id="finalMsg"></p>
+<p id="tries"></p>
+<div id="finalSuccess" class="hidden">
+احبك 💗<br>
+بس لسا المفاجأة ما خلصت…<br>
+ما توقعت أبداً إنك تعرفي كلمة السر بهالمدة القصيرة 😼✨
+</div>
+</div>
+</div>
 
-      <div class="secretMsg" id="secretMsg">
-        <!-- اتركها مؤقتاً، وإنت لاحقاً بتعطيني نص الرسالة -->
-        منوشتي 🎀<br>
-        وجودك معي مو عادي 💕<br>
-        وأنا مبسوط فيكي كتير ✨
-      </div>
-    </div>
+<script>
+// background hearts
+for(let i=0;i<25;i++){
+let s=document.createElement('span');
+s.innerHTML='💖';
+s.style.left=Math.random()*100+'vw';
+s.style.fontSize=(15+Math.random()*20)+'px';
+s.style.animationDuration=(5+Math.random()*5)+'s';
+document.getElementById('bg').appendChild(s);
+}
 
-    <div class="next">
-      <button class="btn btn-ghost" id="toMem">NEXT →</button>
-    </div>
-  </section>
+function go(id){
+document.querySelectorAll('.page').forEach(p=>{
+if(p.classList.contains('active')){
+p.classList.remove('active');
+p.classList.add('left');
+}
+});
+let next=document.getElementById(id);
+next.classList.remove('left');
+next.classList.add('active');
+}
 
-  <!-- Page: Memories -->
-  <section class="page" id="p-mem">
-    <div class="card">
-      <h1 style="font-size:30px;margin-top:6px">ذكريات حلوة 💖</h1>
-      <p>اضغطي على أي بوكس 😼✨</p>
+function checkQ1(){
+if(document.getElementById('a1').value.trim()==='منوشتي'){
+go('q2');
+}else{
+shake('card1');
+}
+}
 
-      <div class="grid" id="grid">
-        <div class="mem" data-text="ضحكنا كتير 😂💗">🎀</div>
-        <div class="mem" data-text="أحلى مكالمة 🥺✨">🧸</div>
-        <div class="mem" data-text="دلع زايد 💕🎀">🍫</div>
-        <div class="mem" data-text="لحظة مميزة ✨🌸">🌸</div>
-        <div class="mem" data-text="قربنا أكتر 💞">😻</div>
-        <div class="mem" data-text="أجمل ضحكة 😭💗">🎁</div>
-      </div>
-    </div>
+function checkQ2(val){
+if(val==='اكرهك'){
+go('q3');
+}else{
+shake('card2');
+}
+}
 
-    <div class="next">
-      <button class="btn btn-ghost" id="toHidden">NEXT →</button>
-    </div>
-  </section>
+function checkQ3(){
+let checked=[...document.querySelectorAll('#q3 input:checked')].map(i=>i.value);
+if(checked.length!==3){shake('card3');return;}
+let correct=['جوعانة','ضهري عم يوجعني','نعسانه'];
+if(correct.every(v=>checked.includes(v))){
+go('celebrate');
+setTimeout(()=>go('count'),1500);
+}else{
+shake('card3');
+}
+}
 
-  <!-- Page: Hidden -->
-  <section class="page" id="p-hidden">
-    <div class="card">
-      <h1 style="font-size:30px;margin-top:6px">🔐</h1>
-      <p>في شي مخبّى هون…</p>
-      <p class="tiny">رح تعرفي الرمز بعد كم يوم 😉</p>
+function shake(id){
+let el=document.getElementById(id);
+el.classList.add('shake');
+setTimeout(()=>el.classList.remove('shake'),300);
+}
 
-      <button class="btn btn-ghost" id="secretBtn">لا تضغطي هون 🙈</button>
+// countdown
+let target=new Date(2026,6,20).getTime();
+setInterval(()=>{
+let now=Date.now();
+let diff=target-now;
+let d=Math.floor(diff/(1000*60*60*24));
+let h=Math.floor((diff/(1000*60*60))%24);
+let m=Math.floor((diff/(1000*60))%60);
+let s=Math.floor((diff/1000)%60);
+document.getElementById('timer').innerHTML=d+" يوم | "+h+" ساعة | "+m+" دقيقة | "+s+" ثانية";
+},1000);
 
-      <div class="secretMsg" id="hiddenMsg" style="display:none;margin-top:14px">
-        السر الكبير رح تعرفيه قريب 🔐✨
-      </div>
+// final secret
+function todayKey(){
+let d=new Date();
+return "tries-"+d.toDateString();
+}
 
-      <div class="tiny" id="clickInfo" style="margin-top:10px;opacity:.75"></div>
-    </div>
-  </section>
+function getTries(){
+return parseInt(localStorage.getItem(todayKey())||"0");
+}
 
-  <script>
-    // --- background generator (hearts + stars + glitter) ---
-    const bg = document.getElementById('bg');
-    const symbols = ["💖","✨","⭐","💗","✦"];
-    const COUNT = 34; // keep light
-    for(let i=0;i<COUNT;i++){
-      const el = document.createElement('div');
-      el.className = 'spark';
-      el.textContent = symbols[Math.floor(Math.random()*symbols.length)];
-      el.style.left = Math.random()*100 + 'vw';
-      el.style.top = (Math.random()*120 - 20) + 'vh';
-      el.style.fontSize = (12 + Math.random()*18) + 'px';
-      el.style.animationDuration = (6 + Math.random()*8) + 's';
-      el.style.animationDelay = (-Math.random()*10) + 's';
-      bg.appendChild(el);
-    }
+function setTries(n){
+localStorage.setItem(todayKey(),n);
+}
 
-    // --- audio pop ---
-    const pop = document.getElementById('pop');
-    function playPop(){
-      try{
-        pop.currentTime = 0;
-        pop.play().catch(()=>{});
-      }catch(e){}
-    }
-    document.addEventListener('click', (e)=>{
-      const t = e.target;
-      if(t && (t.matches('button') || t.closest('button') || t.id === 'gift' || t.classList.contains('mem'))){
-        playPop();
-      }
-    });
+function checkFinal(){
+let tries=getTries();
+if(tries>=5){
+document.getElementById('finalMsg').innerText="خلصت محاولات اليوم 😼 جربي بكرا";
+return;
+}
+if(document.getElementById('finalPwd').value.trim()==='ام ولادي'){
+document.getElementById('finalSuccess').style.display='block';
+}else{
+setTries(tries+1);
+document.getElementById('finalMsg').innerText="مو صح 😼";
+document.getElementById('tries').innerText="المتبقي: "+(5-getTries());
+}
+}
+</script>
 
-    // --- page navigation (slide B) ---
-    const pages = {
-      welcome: document.getElementById('p-welcome'),
-      gate: document.getElementById('p-gate'),
-      count: document.getElementById('p-count'),
-      secret: document.getElementById('p-secret'),
-      mem: document.getElementById('p-mem'),
-      hidden: document.getElementById('p-hidden'),
-    };
-
-    let current = 'welcome';
-    function go(next){
-      if(next === current) return;
-
-      pages[current].classList.remove('active');
-      pages[current].classList.add('left');
-
-      pages[next].classList.remove('left');
-      pages[next].classList.add('active');
-
-      // reset position for future visits
-      setTimeout(()=>{ pages[current].classList.remove('left'); }, 650);
-
-      current = next;
-    }
-
-    document.getElementById('startBtn').addEventListener('click', ()=>go('gate'));
-
-    // --- gate logic ---
-    let attempts = 0;
-    const checkBtn = document.getElementById('checkBtn');
-    const pwd = document.getElementById('pwd');
-    const msg = document.getElementById('msg');
-    const hint = document.getElementById('hint');
-    const gateCard = document.getElementById('gateCard');
-
-    function wrong(){
-      attempts++;
-      msg.textContent = "مو هاد الاسم يلي ببالي 🥺 جربي مرة تانية!";
-      gateCard.classList.remove('shake');
-      void gateCard.offsetWidth;
-      gateCard.classList.add('shake');
-      if(attempts >= 3) hint.style.display = "block";
-    }
-
-    checkBtn.addEventListener('click', ()=>{
-      const val = (pwd.value || "").trim();
-      if(val === "منوشتي"){
-        msg.textContent = "";
-        go('count');
-      }else{
-        wrong();
-      }
-    });
-
-    // allow enter
-    pwd.addEventListener('keydown', (e)=>{
-      if(e.key === "Enter"){ e.preventDefault(); checkBtn.click(); }
-    });
-
-    // --- countdown (2026-07-20 00:00 local) ---
-    const target = new Date(2026, 6, 20, 0, 0, 0).getTime(); // month 6 = July
-    const d = document.getElementById('d');
-    const h = document.getElementById('h');
-    const m = document.getElementById('m');
-    const s = document.getElementById('s');
-
-    function setBump(el){
-      el.classList.add('bump');
-      setTimeout(()=>el.classList.remove('bump'), 130);
-    }
-
-    let prev = {D:null,H:null,M:null,S:null};
-    function tick(){
-      const now = Date.now();
-      let diff = Math.max(0, target - now);
-
-      const days = Math.floor(diff / (1000*60*60*24));
-      diff %= (1000*60*60*24);
-      const hours = Math.floor(diff / (1000*60*60));
-      diff %= (1000*60*60);
-      const mins = Math.floor(diff / (1000*60));
-      diff %= (1000*60);
-      const secs = Math.floor(diff / 1000);
-
-      const DD = String(days).padStart(2,'0');
-      const HH = String(hours).padStart(2,'0');
-      const MM = String(mins).padStart(2,'0');
-      const SS = String(secs).padStart(2,'0');
-
-      if(prev.D !== DD){ d.textContent = DD; setBump(d); prev.D = DD; }
-      if(prev.H !== HH){ h.textContent = HH; setBump(h); prev.H = HH; }
-      if(prev.M !== MM){ m.textContent = MM; setBump(m); prev.M = MM; }
-      if(prev.S !== SS){ s.textContent = SS; setBump(s); prev.S = SS; }
-    }
-    tick();
-    setInterval(tick, 1000);
-
-    document.getElementById('toSecret').addEventListener('click', ()=>go('secret'));
-    document.getElementById('toMem').addEventListener('click', ()=>go('mem'));
-    document.getElementById('toHidden').addEventListener('click', ()=>go('hidden'));
-
-    // --- secret box ---
-    const gift = document.getElementById('gift');
-    const secretMsg = document.getElementById('secretMsg');
-    let opened = false;
-    gift.addEventListener('click', ()=>{
-      if(opened) return;
-      opened = true;
-      secretMsg.style.display = "block";
-    });
-
-    // --- memories modal (expand) ---
-    const overlay = document.getElementById('overlay');
-    const grid = document.getElementById('grid');
-
-    function closeBig(){
-      const big = document.querySelector('.mem.big');
-      if(big){
-        big.classList.remove('big');
-        big.innerHTML = big.dataset.icon;
-      }
-      overlay.classList.remove('show');
-    }
-
-    overlay.addEventListener('click', closeBig);
-
-    grid.addEventListener('click', (e)=>{
-      const item = e.target.closest('.mem');
-      if(!item) return;
-
-      // close previous
-      closeBig();
-
-      overlay.classList.add('show');
-      item.dataset.icon = item.textContent;
-      item.classList.add('big');
-      item.innerHTML = `<div style="font-size:56px">${item.dataset.icon}</div><div style="font-size:20px;color:#ff5aa5;font-weight:900">${item.dataset.text}</div><div class="tiny">اضغطي برا لحتى تسكري 🙈</div>`;
-    });
-
-    // --- hidden secret (make it obvious + requires 3 clicks) ---
-    const secretBtn = document.getElementById('secretBtn');
-    const hiddenMsg = document.getElementById('hiddenMsg');
-    const clickInfo = document.getElementById('clickInfo');
-    let clicks = 0;
-
-    secretBtn.addEventListener('click', ()=>{
-      clicks++;
-      const left = Math.max(0, 3 - clicks);
-      if(clicks < 3){
-        clickInfo.textContent = `باقي ${left}... 😼`;
-      }else{
-        hiddenMsg.style.display = "block";
-        clickInfo.textContent = "";
-      }
-    });
-  </script>
 </body>
 </html>
