@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>عالم الدلوعة 🎀</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: linear-gradient(135deg, #ffd6e8, #fff0f7);
+      font-family: Arial, sans-serif;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #ff4da6;
+      margin: 15px 0 5px 0;
+    }
+
+    .subtitle {
+      color: #ff80bf;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .kitty {
+      width: 240px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .arrow {
+      font-size: 2rem;
+      color: #ff66b2;
+      animation: bounce 1.5s infinite;
+      margin-top: 10px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(12px); }
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 25px;
+      font-size: 1rem;
+      background-color: white;
+      border: 2px solid #ff99cc;
+      border-radius: 25px;
+      color: #ff4da6;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ffe6f2;
+    }
+  </style>
+</head>
+
+<body>
+
+  <img src="hello.png" alt="Hello Kitty" class="kitty" />
+
+  <h1>أهلاً بك في عالم الدلوعة 🎀💗</h1>
+  <div class="subtitle">استعدي لشي كيوت كتير 🌸✨</div>
+
+  <div class="arrow">👇</div>
+
+  <button>البداية هون 💕</button>
+
+</body>
+</html>
