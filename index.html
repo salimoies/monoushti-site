@@ -1,263 +1,580 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>عالم دلوعتي 🎀</title>
 
 <style>
 :root{
---pink:#ff5aa5;
---pink2:#ff8fc2;
---bg1:#ffd9ec;
---bg2:#ffc2e2;
+  --pink:#ff5aa5;
+  --pink2:#ff8fc2;
+  --bg1:#ffd7ea;   /* أغمق/أزهري أكثر */
+  --bg2:#ffbedd;
+  --radius:28px;
 }
 
+*{box-sizing:border-box;}
+
 body{
-margin:0;
-font-family:Arial, sans-serif;
-background:linear-gradient(135deg,var(--bg1),var(--bg2));
-overflow:hidden;
-color:#7a1d4f;
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,var(--bg1),var(--bg2));
+  overflow:hidden;
+  color:#7a1d4f;
 }
 
 .page{
-position:absolute;
-inset:0;
-display:flex;
-justify-content:center;
-align-items:center;
-transition:.6s;
-transform:translateX(120%);
-opacity:0;
-padding:20px;
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:.6s;
+  transform:translateX(120%);
+  opacity:0;
+  padding:20px;
 }
 
 .page.active{
-transform:translateX(0);
-opacity:1;
+  transform:translateX(0);
+  opacity:1;
 }
 
 .page.left{
-transform:translateX(-120%);
-opacity:0;
+  transform:translateX(-120%);
+  opacity:0;
 }
 
 .card{
-background:white;
-padding:25px;
-border-radius:32px;
-text-align:center;
-max-width:420px;
-width:95%;
-box-shadow:0 20px 40px rgba(255,90,165,.25);
+  background: rgba(255,255,255,.92);
+  padding:25px;
+  border-radius:32px;
+  text-align:center;
+  max-width:420px;
+  width:95%;
+  box-shadow:0 20px 40px rgba(255,90,165,.25);
+  backdrop-filter: blur(6px);
 }
 
+h1,h2,p{margin:10px 0;}
+
 button{
-padding:12px 20px;
-border-radius:30px;
-border:none;
-cursor:pointer;
-background:linear-gradient(90deg,var(--pink2),var(--pink));
-color:white;
-font-weight:bold;
-margin-top:12px;
+  padding:12px 20px;
+  border-radius:30px;
+  border:none;
+  cursor:pointer;
+  background: linear-gradient(90deg,var(--pink2),var(--pink));
+  color:white;
+  font-weight:bold;
+  margin-top:12px;
+  box-shadow: 0 10px 20px rgba(255,90,165,.25);
+  transition: transform .12s ease;
+}
+
+button:active{ transform: scale(.97); }
+
+.btn-ghost{
+  background: white;
+  color: var(--pink);
+  border: 2px solid rgba(255,143,194,.8);
 }
 
 input{
-padding:10px;
-border-radius:20px;
-border:2px solid var(--pink2);
-width:80%;
-text-align:center;
+  padding:10px 12px;
+  border-radius:20px;
+  border:2px solid var(--pink2);
+  width:80%;
+  text-align:center;
+  outline:none;
 }
 
 .next{
-position:fixed;
-bottom:20px;
-left:20px;
+  position:fixed;
+  bottom:20px;
+  left:20px;
 }
 
 .hidden{display:none;}
 
 .mem-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:10px;
 }
 
 .mem{
-background:white;
-border-radius:20px;
-padding:20px;
-cursor:pointer;
-font-size:24px;
-border:2px solid var(--pink2);
+  background:white;
+  border-radius:20px;
+  padding:20px;
+  cursor:pointer;
+  font-size:24px;
+  border:2px solid var(--pink2);
+  transition: transform .15s ease;
 }
+.mem:active{ transform: scale(.97); }
 
-.shake{
-animation:shake .3s;
-}
+.shake{ animation:shake .3s; }
 @keyframes shake{
-0%{transform:translateX(0)}
-25%{transform:translateX(8px)}
-50%{transform:translateX(-8px)}
-75%{transform:translateX(6px)}
-100%{transform:translateX(0)}
+  0%{transform:translateX(0)}
+  25%{transform:translateX(8px)}
+  50%{transform:translateX(-8px)}
+  75%{transform:translateX(6px)}
+  100%{transform:translateX(0)}
 }
 
-/* Floating hearts */
+/* Floating hearts/stars/glitter */
 .bg span{
-position:absolute;
-animation:float 8s linear infinite;
-opacity:.5;
+  position:absolute;
+  animation: float 9s linear infinite;
+  opacity:.55;
+  user-select:none;
+  pointer-events:none;
 }
 @keyframes float{
-from{transform:translateY(100vh)}
-to{transform:translateY(-10vh)}
+  from{ transform:translateY(110vh) rotate(0deg); }
+  to{ transform:translateY(-15vh) rotate(12deg); }
+}
+
+/* Q3 options nicer */
+.q3-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+  margin-top:10px;
+  text-align:right;
+}
+.opt{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,143,194,.55);
+  background: rgba(255,255,255,.8);
+}
+.note{
+  font-size:13px;
+  opacity:.75;
+  margin-top:8px;
+}
+.msg{
+  min-height:20px;
+  font-weight:bold;
+  color:#b02a63;
+}
+
+/* Countdown big */
+#timer{
+  font-size:18px;
+  font-weight:bold;
+  padding:10px;
+  margin-top:10px;
+}
+
+/* Confetti canvas */
+#confetti{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;
 }
 </style>
 </head>
 
 <body>
-
+<canvas id="confetti" class="hidden"></canvas>
 <div class="bg" id="bg"></div>
 
 <audio id="pop" preload="auto">
-<source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=">
+  <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=">
 </audio>
 
 <!-- Welcome -->
 <div class="page active" id="welcome">
-<div class="card">
-<h1>أهلاً بك في عالم دلوعتي 🎀</h1>
-<p>بدأت الحكاية بـ 03.02</p>
-<button onclick="playPop(); go('verify')">البداية هون 👇</button>
-</div>
+  <div class="card">
+    <h1>أهلاً بك في عالم دلوعتي 🎀</h1>
+    <p>بدأت الحكاية بـ 03.02</p>
+    <button onclick="playPop(); go('verify')">البداية هون 👇</button>
+  </div>
 </div>
 
 <!-- Verify -->
 <div class="page" id="verify">
-<div class="card">
-<h2>قبل ما نبدأ لازم أتأكد من هويتك</h2>
-<button onclick="playPop(); go('q1')">اضغطي هون لحتى تجاوبي على الأسئلة</button>
-</div>
+  <div class="card">
+    <h2>قبل ما نبدأ لازم أتأكد من هويتك</h2>
+    <button onclick="playPop(); go('q1')">اضغطي هون لحتى تجاوبي على الأسئلة</button>
+  </div>
 </div>
 
 <!-- Q1 -->
 <div class="page" id="q1">
-<div class="card" id="card1">
-<h2>شو أكتر اسم بحب ناديكي فيه؟</h2>
-<input id="a1">
-<button onclick="playPop(); checkQ1()">تأكيد</button>
-<p id="m1"></p>
-</div>
+  <div class="card" id="card1">
+    <h2>شو أكتر اسم بحب ناديكي فيه؟</h2>
+    <input id="a1" placeholder="اكتبي الجواب..." autocomplete="off" />
+    <button onclick="playPop(); checkQ1()">تأكيد</button>
+    <p id="m1" class="msg"></p>
+  </div>
 </div>
 
 <!-- Q2 -->
 <div class="page" id="q2">
-<div class="card" id="card2">
-<h2>لما أقلك بحبك شو بتردي عليّ؟</h2>
-<button onclick="playPop(); checkQ2('احبك كثير')">احبك كثير</button>
-<button onclick="playPop(); checkQ2('ما احبك')">ما احبك</button>
-<button onclick="playPop(); checkQ2('اكرهك')">اكرهك</button>
-<p id="m2"></p>
-</div>
+  <div class="card" id="card2">
+    <h2>لما أقلك بحبك شو بتردي عليّ؟</h2>
+    <button onclick="playPop(); checkQ2('احبك كثير')">احبك كثير</button>
+    <button onclick="playPop(); checkQ2('ما احبك')">ما احبك</button>
+    <button onclick="playPop(); checkQ2('اكرهك')">اكرهك</button>
+    <p id="m2" class="msg"></p>
+  </div>
 </div>
 
 <!-- Q3 -->
 <div class="page" id="q3">
-<div class="card" id="card3">
-<h2>اختاري أكثر 3 كلمات بتقوليهم</h2>
-<div id="q3Options"></div>
-<button onclick="playPop(); checkQ3()">تأكيد</button>
-<p id="m3"></p>
+  <div class="card" id="card3">
+    <h2>اختاري أكثر 3 كلمات بتقوليهم</h2>
+    <div id="q3Options" class="q3-grid"></div>
+    <div class="note" id="q3Note">اختاري 3 فقط ✨</div>
+    <button onclick="playPop(); checkQ3()">تأكيد</button>
+    <p id="m3" class="msg"></p>
+  </div>
 </div>
+
+<!-- Celebration -->
+<div class="page" id="celebrate">
+  <div class="card">
+    <h1>صح 😼✨</h1>
+    <p>انتي فعلاً أمينة 🎀</p>
+  </div>
+</div>
+
+<!-- Countdown -->
+<div class="page" id="count">
+  <div class="card">
+    <h2 style="font-weight:900">بعد هاذ الوقت رح نشوف بعض 💕</h2>
+    <div id="timer">...</div>
+  </div>
+  <div class="next">
+    <button onclick="playPop(); go('secret')">NEXT →</button>
+  </div>
+</div>
+
+<!-- Secret Box -->
+<div class="page" id="secret">
+  <div class="card" id="cardSecret">
+    <h2>🎁 اضغطي لتعرفي سر</h2>
+    <button onclick="playPop(); openSecret()">افتحي</button>
+    <div id="secretText" class="hidden" style="margin-top:12px; line-height:1.9;">
+      منوشتي 🎀<br>
+      وجودك بحياتي هو احلى شي صارلي 💕<br>
+      احبك اكثر من كلشي بهلعالم <br>
+      وأنا مبسوط فيكي كتير ✨
+    </div>
+  </div>
+  <div class="next">
+    <button onclick="playPop(); go('mem')">NEXT →</button>
+  </div>
+</div>
+
+<!-- Memories -->
+<div class="page" id="mem">
+  <div class="card">
+    <h2>ذكريات حلوة 💖</h2>
+    <div class="mem-grid">
+      <div class="mem" onclick="playPop()">🎀</div>
+      <div class="mem" onclick="playPop()">🧸</div>
+      <div class="mem" onclick="playPop()">🍫</div>
+      <div class="mem" onclick="playPop()">🌸</div>
+      <div class="mem" onclick="playPop()">😻</div>
+      <div class="mem" onclick="playPop()">🎁</div>
+    </div>
+  </div>
+  <div class="next">
+    <button onclick="playPop(); go('hidden')">NEXT →</button>
+  </div>
+</div>
+
+<!-- Hidden -->
+<div class="page" id="hidden">
+  <div class="card" id="cardHidden">
+    <h2>🔐 السر الكبير</h2>
+    <input id="finalPwd" placeholder="اكتبي كلمة السر..." autocomplete="off" />
+    <button onclick="playPop(); checkFinal()">تأكيد</button>
+    <p id="finalMsg" class="msg"></p>
+    <p id="tries" class="note"></p>
+    <div id="finalSuccess" class="hidden" style="margin-top:12px; line-height:1.9;">
+      أحبك 💗<br>
+      بس لسا المفاجأة ما خلصت…<br>
+      ما توقعت أبداً إنك تعرفي كلمة السر بهالمدة القصيرة 😼✨
+    </div>
+  </div>
 </div>
 
 <script>
-const options=[
-"احبك",
-"نعسانه",
-"اعشقك",
-"جوعانة",
-"مشتاقتلك",
-"ضهري عم يوجعني"
+/* ---------- POP SOUND ---------- */
+const popEl = document.getElementById("pop");
+function playPop(){
+  try{
+    popEl.currentTime = 0;
+    popEl.play().catch(()=>{});
+  }catch(e){}
+}
+
+/* ---------- BACKGROUND FLOATERS ---------- */
+const floats = ["💖","✨","⭐","💗","🌸"];
+for(let i=0;i<28;i++){
+  const s=document.createElement('span');
+  s.textContent = floats[Math.floor(Math.random()*floats.length)];
+  s.style.left = Math.random()*100+'vw';
+  s.style.fontSize = (12+Math.random()*22)+'px';
+  s.style.animationDuration = (6+Math.random()*6)+'s';
+  s.style.animationDelay = (-Math.random()*10)+'s';
+  document.getElementById('bg').appendChild(s);
+}
+
+/* ---------- SAFE NAV ---------- */
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>{
+    if(p.classList.contains('active')){
+      p.classList.remove('active');
+      p.classList.add('left');
+    }
+  });
+
+  const next = document.getElementById(id);
+  if(!next){
+    console.error("Page not found:", id);
+    const fallback = document.getElementById('welcome');
+    if(fallback){
+      fallback.classList.remove('left');
+      fallback.classList.add('active');
+    }
+    return;
+  }
+
+  next.classList.remove('left');
+  next.classList.add('active');
+
+  if(id==='q3'){ loadQ3(); }
+  if(id==='hidden'){ updateTriesUI(); }
+}
+
+/* ---------- Q1 ---------- */
+function checkQ1(){
+  const v = document.getElementById('a1').value.trim();
+  if(v === 'منوشتي'){
+    document.getElementById('m1').textContent = '';
+    go('q2');
+  }else{
+    shake('card1');
+    document.getElementById('m1').textContent = 'مو هاد الاسم يلي ببالي 🥺';
+  }
+}
+
+/* ---------- Q2 ---------- */
+function checkQ2(val){
+  if(val === 'اكرهك'){
+    document.getElementById('m2').textContent = '';
+    go('q3');
+  }else{
+    shake('card2');
+    document.getElementById('m2').textContent = 'لا 😼 جربي كمان';
+  }
+}
+
+/* ---------- Q3 RANDOM + LIMIT 3 ---------- */
+const q3All = [
+  "احبك",
+  "نعسانه",
+  "اعشقك",
+  "جوعانة",
+  "مشتاقتلك",
+  "ضهري عم يوجعني"
 ];
 
-function shuffle(array){
-return array.sort(()=>Math.random()-0.5);
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
 }
 
 function loadQ3(){
-const container=document.getElementById("q3Options");
-container.innerHTML="";
-shuffle(options).forEach(opt=>{
-let label=document.createElement("label");
-label.innerHTML=`<input type="checkbox" value="${opt}"> ${opt}`;
-container.appendChild(label);
-container.appendChild(document.createElement("br"));
-});
-}
+  const box = document.getElementById('q3Options');
+  box.innerHTML = '';
+  const mixed = shuffle(q3All);
 
-loadQ3();
+  mixed.forEach(opt=>{
+    const label = document.createElement('label');
+    label.className = 'opt';
+    label.innerHTML = `<input type="checkbox" value="${opt}"> <span>${opt}</span>`;
+    box.appendChild(label);
+  });
 
-function playPop(){
-let p=document.getElementById("pop");
-p.currentTime=0;
-p.play().catch(()=>{});
-}
+  // منع أكثر من 3
+  box.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+    cb.addEventListener('change', (e)=>{
+      const checked = box.querySelectorAll('input:checked');
+      if(checked.length > 3){
+        e.target.checked = false;
+        playPop();
+      }
+    });
+  });
 
-for(let i=0;i<25;i++){
-let s=document.createElement('span');
-s.innerHTML='💖';
-s.style.left=Math.random()*100+'vw';
-s.style.fontSize=(15+Math.random()*20)+'px';
-s.style.animationDuration=(5+Math.random()*5)+'s';
-document.getElementById('bg').appendChild(s);
-}
-
-function go(id){
-document.querySelectorAll('.page').forEach(p=>{
-if(p.classList.contains('active')){
-p.classList.remove('active');
-p.classList.add('left');
-}
-});
-let next=document.getElementById(id);
-next.classList.remove('left');
-next.classList.add('active');
-if(id==='q3'){loadQ3();}
-}
-
-function checkQ1(){
-if(document.getElementById('a1').value.trim()==='منوشتي'){
-go('q2');
-}else{shake('card1');}
-}
-
-function checkQ2(val){
-if(val==='اكرهك'){
-go('q3');
-}else{shake('card2');}
+  document.getElementById('m3').textContent = '';
 }
 
 function checkQ3(){
-let checked=[...document.querySelectorAll('#q3Options input:checked')].map(i=>i.value);
-if(checked.length!==3){shake('card3');return;}
-let correct=['جوعانة','ضهري عم يوجعني','نعسانه'];
-if(correct.every(v=>checked.includes(v))){
-go('celebrate');
-}else{shake('card3');}
+  const checked = [...document.querySelectorAll('#q3Options input:checked')].map(i=>i.value);
+
+  if(checked.length !== 3){
+    shake('card3');
+    document.getElementById('m3').textContent = 'اختاري 3 بس 😼';
+    return;
+  }
+
+  const correct = ['جوعانة','ضهري عم يوجعني','نعسانه'];
+
+  if(correct.every(v=>checked.includes(v))){
+    document.getElementById('m3').textContent = '';
+    go('celebrate');
+    popConfetti();
+    setTimeout(()=>go('count'), 1500);
+  }else{
+    shake('card3');
+    document.getElementById('m3').textContent = 'لاا 😼 مو هدول';
+  }
 }
 
+/* ---------- CONFETTI LIGHT ---------- */
+function popConfetti(){
+  const c = document.getElementById('confetti');
+  const ctx = c.getContext('2d');
+  c.classList.remove('hidden');
+
+  const w = c.width = window.innerWidth;
+  const h = c.height = window.innerHeight;
+
+  const colors = ['#ff5aa5','#ff8fc2','#ffffff','#ffd1e8'];
+  const parts = Array.from({length: 120}).map(()=>({
+    x: Math.random()*w,
+    y: -20 - Math.random()*200,
+    vx: (Math.random()-0.5)*2.2,
+    vy: 2.2 + Math.random()*2.6,
+    r: 2 + Math.random()*3,
+    c: colors[Math.floor(Math.random()*colors.length)],
+    a: 1
+  }));
+
+  let t0 = performance.now();
+  function tick(t){
+    const dt = (t - t0);
+    ctx.clearRect(0,0,w,h);
+
+    parts.forEach(p=>{
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.02;
+      p.a -= 0.0025;
+      ctx.globalAlpha = Math.max(0,p.a);
+      ctx.fillStyle = p.c;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+    });
+
+    ctx.globalAlpha = 1;
+
+    if(dt < 1400){
+      requestAnimationFrame(tick);
+    }else{
+      c.classList.add('hidden');
+      ctx.clearRect(0,0,w,h);
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ---------- SHAKE ---------- */
 function shake(id){
-let el=document.getElementById(id);
-el.classList.add('shake');
-setTimeout(()=>el.classList.remove('shake'),300);
+  const el=document.getElementById(id);
+  el.classList.add('shake');
+  setTimeout(()=>el.classList.remove('shake'),300);
+}
+
+/* ---------- COUNTDOWN ---------- */
+const target = new Date(2026,6,20).getTime(); // 20 July 2026 (month 6 = July)
+setInterval(()=>{
+  const now = Date.now();
+  let diff = Math.max(0, target - now);
+
+  const d = Math.floor(diff/(1000*60*60*24));
+  const h = Math.floor((diff/(1000*60*60))%24);
+  const m = Math.floor((diff/(1000*60))%60);
+  const s = Math.floor((diff/1000)%60);
+
+  const pad = (x)=> String(x).padStart(2,'0');
+  document.getElementById('timer').textContent =
+    `${d} يوم | ${pad(h)} ساعة | ${pad(m)} دقيقة | ${pad(s)} ثانية`;
+},1000);
+
+/* ---------- SECRET BOX ---------- */
+function openSecret(){
+  document.getElementById('secretText').style.display='block';
+}
+
+/* ---------- FINAL SECRET (5 tries/day) ---------- */
+const FINAL_SECRET = "ام ولادي";
+const MAX_TRIES = 5;
+
+function todayKey(){
+  const d = new Date();
+  return `tries-${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+}
+
+function getTries(){
+  return parseInt(localStorage.getItem(todayKey()) || "0", 10);
+}
+function setTries(n){
+  localStorage.setItem(todayKey(), String(n));
+}
+function normalize(str){
+  return (str || "").replace(/\s+/g,' ').trim();
+}
+function remaining(){
+  return MAX_TRIES - getTries();
+}
+
+function updateTriesUI(){
+  const left = Math.max(0, remaining());
+  document.getElementById('tries').textContent = `المتبقي اليوم: ${left} / ${MAX_TRIES}`;
+}
+
+updateTriesUI();
+
+function checkFinal(){
+  const tries = getTries();
+  if(tries >= MAX_TRIES){
+    document.getElementById('finalMsg').textContent = "خلصت محاولات اليوم 😼 جربي بكرا";
+    updateTriesUI();
+    return;
+  }
+
+  const val = normalize(document.getElementById('finalPwd').value);
+  const secret = normalize(FINAL_SECRET);
+
+  if(val === secret){
+    document.getElementById('finalMsg').textContent = "";
+    document.getElementById('finalSuccess').style.display = "block";
+  }else{
+    setTries(tries + 1);
+    document.getElementById('finalMsg').textContent = "مو صح 😼";
+    updateTriesUI();
+  }
 }
 </script>
-
 </body>
 </html>
