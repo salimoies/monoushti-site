@@ -1,127 +1,227 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { FloatingBackground } from "@/components/FloatingBackground";
-import { CountdownTimer } from "@/components/CountdownTimer";
-import { SecretBox } from "@/components/SecretBox";
-import { MemoriesGrid } from "@/components/MemoriesGrid";
-import { HiddenSecret } from "@/components/HiddenSecret";
-import { WelcomeScreen } from "@/components/WelcomeScreen";
-import { PasswordGate } from "@/components/PasswordGate";
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عالم دلوعتي أمينة 🎀</title>
 
-export default function Home() {
-  const [appState, setAppState] = useState<
-    "welcome" |
-    "gate" |
-    "countdown" |
-    "secret" |
-    "memories" |
-    "hidden"
-  >("welcome");
-
-  return (
-    <div className="min-h-screen relative overflow-hidden" dir="rtl">
-      <FloatingBackground />
-
-      <div className="relative z-10 w-full">
-        <AnimatePresence mode="wait">
-
-          {appState === "welcome" && (
-            <motion.div
-              key="welcome"
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -300, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 120 }}
-            >
-              <WelcomeScreen onNext={() => setAppState("gate")} />
-            </motion.div>
-          )}
-
-          {appState === "gate" && (
-            <motion.div
-              key="gate"
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -300, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 120 }}
-            >
-              <PasswordGate onUnlock={() => setAppState("countdown")} />
-            </motion.div>
-          )}
-
-          {appState === "countdown" && (
-            <motion.div
-              key="countdown"
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -300, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 120 }}
-              className="min-h-screen flex flex-col items-center justify-center relative"
-            >
-              <CountdownTimer />
-
-              <div className="fixed bottom-6 left-6">
-                <Button onClick={() => setAppState("secret")}>
-                  NEXT →
-                </Button>
-              </div>
-            </motion.div>
-          )}
-
-          {appState === "secret" && (
-            <motion.div
-              key="secret"
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -300, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 120 }}
-              className="min-h-screen flex flex-col items-center justify-center relative"
-            >
-              <SecretBox />
-
-              <div className="fixed bottom-6 left-6">
-                <Button onClick={() => setAppState("memories")}>
-                  NEXT →
-                </Button>
-              </div>
-            </motion.div>
-          )}
-
-          {appState === "memories" && (
-            <motion.div
-              key="memories"
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -300, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 120 }}
-              className="min-h-screen flex flex-col items-center justify-center relative"
-            >
-              <MemoriesGrid />
-
-              <div className="fixed bottom-6 left-6">
-                <Button onClick={() => setAppState("hidden")}>
-                  NEXT →
-                </Button>
-              </div>
-            </motion.div>
-          )}
-
-          {appState === "hidden" && (
-            <motion.div
-              key="hidden"
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -300, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 120 }}
-              className="min-h-screen flex items-center justify-center"
-            >
-              <HiddenSecret />
-            </motion.div>
-          )}
-
-        </AnimatePresence>
-      </div>
-    </div>
-  );
+<style>
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#ffd6ec,#ffeaf6);
+overflow:hidden;
+text-align:center;
+color:#ff2f92;
 }
+
+/* Floating background */
+.heart{
+position:fixed;
+font-size:20px;
+animation:float 8s linear infinite;
+opacity:0.5;
+}
+@keyframes float{
+0%{transform:translateY(100vh);}
+100%{transform:translateY(-10vh);}
+}
+
+.page{
+position:absolute;
+width:100%;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+transition:0.5s;
+}
+
+.hidden{transform:translateX(100%); opacity:0;}
+.active{transform:translateX(0); opacity:1;}
+.left{transform:translateX(-100%); opacity:0;}
+
+button{
+padding:12px 25px;
+border-radius:30px;
+border:2px solid #ff69b4;
+background:white;
+color:#ff2f92;
+font-size:16px;
+cursor:pointer;
+margin-top:20px;
+}
+
+input{
+padding:10px;
+border-radius:20px;
+border:2px solid #ff99cc;
+text-align:center;
+font-size:16px;
+}
+
+.countdown{
+background:white;
+border:3px solid #ff69b4;
+border-radius:30px;
+padding:25px;
+font-size:22px;
+margin:20px;
+}
+
+.next{
+position:absolute;
+bottom:20px;
+left:20px;
+}
+
+.secret-box{
+background:#ff69b4;
+color:white;
+padding:25px;
+border-radius:30px;
+cursor:pointer;
+}
+
+.memory{
+background:white;
+border:2px solid #ff99cc;
+border-radius:20px;
+padding:20px;
+margin:10px;
+cursor:pointer;
+width:120px;
+}
+
+.hidden-secret{
+display:none;
+margin-top:20px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<script>
+for(let i=0;i<25;i++){
+let h=document.createElement("div");
+h.innerHTML="💖";
+h.className="heart";
+h.style.left=Math.random()*100+"vw";
+h.style.animationDuration=(5+Math.random()*5)+"s";
+document.body.appendChild(h);
+}
+</script>
+
+<!-- PAGE 1 -->
+<div id="welcome" class="page active">
+<h1>أهلاً بك في عالم دلوعتي أمينة 🎀</h1>
+<p>بدأت الحكاية بـ 03.02</p>
+<button onclick="goTo('gate')">البداية هون 👇</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="gate" class="page hidden">
+<h2>شو أكتر اسم بحب ناديكي فيه؟</h2>
+<input id="password">
+<br>
+<button onclick="checkPassword()">تأكيد</button>
+<p id="error"></p>
+</div>
+
+<!-- PAGE 3 -->
+<div id="countdownPage" class="page hidden">
+<div class="countdown" id="countdown"></div>
+<button class="next" onclick="goTo('secret')">NEXT →</button>
+</div>
+
+<!-- PAGE 4 -->
+<div id="secret" class="page hidden">
+<div class="secret-box" onclick="openSecret()">
+اضغطي لتعرفي سر 🎁
+</div>
+<div id="secretText" style="display:none; margin-top:20px;">
+منوشتي 🎀<br>
+وجودك معي مو عادي 💕<br>
+وأنا مبسوط فيكي كتير ✨
+</div>
+<button class="next" onclick="goTo('memories')">NEXT →</button>
+</div>
+
+<!-- PAGE 5 -->
+<div id="memories" class="page hidden">
+<h2>ذكريات حلوة 💖</h2>
+<div style="display:flex; flex-wrap:wrap; justify-content:center;">
+<div class="memory" onclick="this.innerHTML='ضحكنا كتير 😂'">🎀</div>
+<div class="memory" onclick="this.innerHTML='أحلى مكالمة 🥺'">🧸</div>
+<div class="memory" onclick="this.innerHTML='دلع زايد 💕'">🍫</div>
+<div class="memory" onclick="this.innerHTML='لحظة مميزة ✨'">🌸</div>
+<div class="memory" onclick="this.innerHTML='قربنا أكتر 💞'">😻</div>
+<div class="memory" onclick="this.innerHTML='أجمل ضحكة 😭'">🎁</div>
+</div>
+<button class="next" onclick="goTo('hiddenPage')">NEXT →</button>
+</div>
+
+<!-- PAGE 6 -->
+<div id="hiddenPage" class="page hidden">
+<h3>🔐 في شي مخبّى هون...</h3>
+<p>رح تعرفي الرمز بعد كم يوم 😉</p>
+<div onclick="revealHidden()" style="cursor:pointer; margin-top:20px;">🙈 اضغطي هون 3 مرات</div>
+<div id="hiddenSecret" class="hidden-secret">
+السر الكبير رح تعرفيه قريب 🔐✨
+</div>
+</div>
+
+<script>
+function goTo(id){
+let pages=document.querySelectorAll('.page');
+pages.forEach(p=>{
+if(p.classList.contains('active')){
+p.classList.remove('active');
+p.classList.add('left');
+}
+});
+let next=document.getElementById(id);
+next.classList.remove('hidden');
+setTimeout(()=>{next.classList.add('active');},10);
+}
+
+function checkPassword(){
+let val=document.getElementById("password").value.trim();
+if(val==="منوشتي"){
+goTo("countdownPage");
+}else{
+document.getElementById("error").innerText="غلط يا كيوت 🥺";
+}
+}
+
+function openSecret(){
+document.getElementById("secretText").style.display="block";
+}
+
+let clicks=0;
+function revealHidden(){
+clicks++;
+if(clicks>=3){
+document.getElementById("hiddenSecret").style.display="block";
+}
+}
+
+/* Countdown */
+let target=new Date("July 20, 2026 00:00:00").getTime();
+setInterval(()=>{
+let now=new Date().getTime();
+let distance=target-now;
+let d=Math.floor(distance/(1000*60*60*24));
+let h=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+let m=Math.floor((distance%(1000*60*60))/(1000*60));
+let s=Math.floor((distance%(1000*60))/1000);
+document.getElementById("countdown").innerHTML=
+d+" يوم | "+h+" ساعة | "+m+" دقيقة | "+s+" ثانية";
+},1000);
+</script>
+
+</body>
+</html>
