@@ -6,24 +6,99 @@
 <title>البداية</title>
 
 <style>
+
 body{
-background-color:#FFB6C1;
+background-color:#ffb6c1;
 display:flex;
+flex-direction:column;
 justify-content:center;
 align-items:center;
 height:100vh;
 margin:0;
-font-size:60px;
 font-family:Arial;
-font-weight:bold;
 }
+
+/* الشخصية */
+
+.character{
+width:120px;
+height:120px;
+background:white;
+border-radius:50%;
+position:relative;
+margin-bottom:40px;
+border:4px solid black;
+}
+
+.eye{
+width:12px;
+height:12px;
+background:black;
+border-radius:50%;
+position:absolute;
+top:45px;
+}
+
+.eye.left{
+left:30px;
+}
+
+.eye.right{
+right:30px;
+}
+
+.nose{
+width:14px;
+height:10px;
+background:yellow;
+border-radius:50%;
+position:absolute;
+top:60px;
+left:50%;
+transform:translateX(-50%);
+}
+
+/* زر البداية */
+
+button{
+background:#ff69b4;
+border:none;
+padding:15px 40px;
+font-size:20px;
+color:white;
+border-radius:12px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#ff1493;
+transform:scale(1.1);
+}
+
 </style>
 
 </head>
 
 <body>
 
-البداية من هون
+<div class="character">
+
+<div class="eye left"></div>
+<div class="eye right"></div>
+<div class="nose"></div>
+
+</div>
+
+<button onclick="start()">بداية</button>
+
+<script>
+
+function start(){
+alert("أهلاً بك في الموقع");
+}
+
+</script>
 
 </body>
 
