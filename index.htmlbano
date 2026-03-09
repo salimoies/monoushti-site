@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>البداية</title>
+
+<style>
+body{
+background-color:pink;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+font-size:60px;
+font-family:Arial;
+font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+البداية من هون
+
+</body>
+
+</html>
