@@ -3,17 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>عالم بانو النكدية و العنيدة</title>
+  <title>جدول الشغل</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="container">
+    <div class="card" id="loginCard">
+      <h1>جدول الشغل</h1>
+      <p class="subtitle">سجّل دخولك حتى تشوف دوامك</p>
 
-  <div class="app">
-    <div class="character">هوزان</div>
+      <label for="username">الاسم</label>
+      <input type="text" id="username" placeholder="مثال: salim" />
 
-    <div class="box">
-      <div id="text"></div>
-      <div id="answers"></div>
+      <label for="password">كلمة المرور</label>
+      <input type="password" id="password" placeholder="اكتب كلمة المرور" />
+
+      <button id="loginBtn">دخول</button>
+
+      <p id="errorMessage" class="error"></p>
+    </div>
+
+    <div class="card hidden" id="dashboardCard">
+      <div class="topRow">
+        <div>
+          <h2 id="welcomeText">أهلًا</h2>
+          <p class="subtitle">هذا جدولك الحالي</p>
+        </div>
+        <button id="logoutBtn" class="logout-btn">تسجيل خروج</button>
+      </div>
+
+      <div class="info-box">
+        <p><strong>الاسم:</strong> <span id="workerName"></span></p>
+        <p><strong>المنصب:</strong> <span id="workerRole"></span></p>
+        <p><strong>العطلة:</strong> <span id="workerOffDay"></span></p>
+      </div>
+
+      <h3>أيام الدوام</h3>
+      <div id="scheduleList" class="schedule-list"></div>
     </div>
   </div>
 
