@@ -16,10 +16,17 @@ const loginBtn = document.getElementById("loginBtn");
 const username = document.getElementById("username");
 const password = document.getElementById("password");
 
-loginBtn.addEventListener("click", function () {
+const loginCard = document.getElementById("loginCard");
+const dashboardCard = document.getElementById("dashboardCard");
 
-  const user = username.value.toLowerCase();
-  const pass = password.value;
+const workerName = document.getElementById("workerName");
+const workerRole = document.getElementById("workerRole");
+const workerOffDay = document.getElementById("workerOffDay");
+const welcomeText = document.getElementById("welcomeText");
+
+loginBtn.addEventListener("click", function () {
+  const user = username.value.trim().toLowerCase();
+  const pass = password.value.trim();
 
   const worker = workers[user];
 
@@ -33,6 +40,11 @@ loginBtn.addEventListener("click", function () {
     return;
   }
 
-  alert("اهلا " + worker.name);
+  loginCard.classList.add("hidden");
+  dashboardCard.classList.remove("hidden");
 
+  welcomeText.innerText = "أهلًا " + worker.name;
+  workerName.innerText = worker.name;
+  workerRole.innerText = worker.role;
+  workerOffDay.innerText = worker.off;
 });
