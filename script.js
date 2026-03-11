@@ -41,13 +41,33 @@ document.addEventListener("DOMContentLoaded", function () {
         السبت: { off: false, start: "12:00", end: "20:00", note: "توصيل", crossesMidnight: false },
         الأحد: { off: true, start: "", end: "", note: "", crossesMidnight: false }
       }
+    },
+    khaled: {
+      password: "9999",
+      name: "خالد",
+      role: "عامل مطبخ",
+      schedule: {
+        الاثنين: { off: false, start: "11:00", end: "19:00", note: "تطحين", crossesMidnight: false },
+        الثلاثاء: { off: false, start: "11:00", end: "19:00", note: "تقطيع", crossesMidnight: false },
+        الأربعاء: { off: true, start: "", end: "", note: "", crossesMidnight: false },
+        الخميس: { off: false, start: "15:00", end: "23:00", note: "شغل جوا", crossesMidnight: false },
+        الجمعة: { off: false, start: "15:00", end: "23:00", note: "تطحين", crossesMidnight: false },
+        السبت: { off: true, start: "", end: "", note: "", crossesMidnight: false },
+        الأحد: { off: false, start: "12:00", end: "20:00", note: "تقطيع", crossesMidnight: false }
+      }
     }
   };
+
+  let replacementRequests = [];
 
   const managerAccount = {
     username: "manager",
     password: "admin123"
   };
+
+  let currentUser = null;
+  let currentUserKey = null;
+  let currentView = "login";
 
   const loginBtn = document.getElementById("loginBtn");
   const username = document.getElementById("username");
@@ -85,6 +105,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const managerDayOverview = document.getElementById("managerDayOverview");
   const managerWeekText = document.getElementById("managerWeekText");
 
+  const requestDaySelect = document.getElementById("requestDaySelect");
+  const createReplacementRequestBtn = document.getElementById("createReplacementRequestBtn");
+  const workerRequestsList = document.getElementById("workerRequestsList");
+  const managerRequestsList = document.getElementById("managerRequestsList");
+
   let editingWorker = null;
 
   buildDaysInputs();
@@ -95,6 +120,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const pass = password.value.trim();
 
     if (user === managerAccount.username && pass === managerAccount.password) {
+      currentUser = {
+        name: "المانجر",
+        role: "مانجر"
+      };
+      currentUserKey = "manager";
+      currentView = "manager";
       openManagerPanel();
       return;
     }
@@ -111,7 +142,10 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    openWorkerDashboard(worker);
+    currentUser = worker;
+    currentUserKey = user;
+    currentView = "worker";
+    openWorkerDashboard(worker, user);
   });
 
   addWorkerBtn.addEventListener("click", openAddForm);
@@ -123,6 +157,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   managerDaySelect.addEventListener("change", function () {
     renderManagerDayOverview(this.value);
+  });
+
+  createReplacementRequestBtn.addEventListener("click", function () {
+    createReplacementRequest();
   });
 
   saveWorkerBtn.addEventListener("click", function () {
@@ -202,12 +240,13 @@ document.addEventListener("DOMContentLoaded", function () {
     clearForm();
     renderWorkersList();
     renderManagerDayOverview(managerDaySelect.value);
+    renderManagerRequests();
   });
 
   logoutBtn.addEventListener("click", logout);
   managerLogoutBtn.addEventListener("click", logout);
 
-  function openWorkerDashboard(worker) {
+  function openWorkerDashboard(worker, usernameKey) {
     loginCard.classList.add("hidden");
     managerCard.classList.add("hidden");
     workerFormCard.classList.add("hidden");
@@ -218,6 +257,12 @@ document.addEventListener("DOMContentLoaded", function () {
     workerRole.innerText = worker.role;
     workerWeekText.innerText = getWeekRangeText();
 
+    renderWorkerSchedule(worker);
+    buildWorkerRequestDaySelect(worker);
+    renderWorkerRequests(usernameKey);
+  }
+
+  function renderWorkerSchedule(worker) {
     scheduleList.innerHTML = "";
 
     for (const day of days) {
@@ -254,6 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
     managerWeekText.innerText = getWeekRangeText();
     renderWorkersList();
     renderManagerDayOverview(managerDaySelect.value);
+    renderManagerRequests();
   }
 
   function renderWorkersList() {
@@ -366,13 +412,244 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function buildWorkerRequestDaySelect(worker) {
+    requestDaySelect.innerHTML = "";
+
+    const availableDays = days.filter(day => {
+      const dayData = worker.schedule[day];
+      return dayData && !dayData.off;
+    });
+
+    if (availableDays.length === 0) {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "ما عندك أيام دوام";
+      requestDaySelect.appendChild(option);
+      requestDaySelect.disabled = true;
+      createReplacementRequestBtn.disabled = true;
+      return;
+    }
+
+    requestDaySelect.disabled = false;
+    createReplacementRequestBtn.disabled = false;
+
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "اختر يوم";
+    requestDaySelect.appendChild(defaultOption);
+
+    availableDays.forEach(day => {
+      const option = document.createElement("option");
+      option.value = day;
+      option.textContent = day;
+      requestDaySelect.appendChild(option);
+    });
+  }
+
+  function createReplacementRequest() {
+    if (!currentUser || !currentUserKey || currentView !== "worker") return;
+
+    const selectedDay = requestDaySelect.value;
+
+    if (!selectedDay) {
+      alert("اختر يوم أول.");
+      return;
+    }
+
+    const existingOpenRequest = replacementRequests.find(req =>
+      req.createdBy === currentUserKey &&
+      req.day === selectedDay &&
+      req.weekStart === getCurrentWeekStartString() &&
+      req.status === "open"
+    );
+
+    if (existingOpenRequest) {
+      alert("أنت بالفعل عامل طلب مفتوح لهذا اليوم.");
+      return;
+    }
+
+    const dayData = currentUser.schedule[selectedDay];
+
+    if (!dayData || dayData.off) {
+      alert("هذا اليوم أصلاً مو دوام عندك.");
+      return;
+    }
+
+    const request = {
+      id: generateRequestId(),
+      createdBy: currentUserKey,
+      workerName: currentUser.name,
+      role: currentUser.role,
+      day: selectedDay,
+      start: dayData.start,
+      end: dayData.end,
+      note: dayData.note,
+      weekStart: getCurrentWeekStartString(),
+      status: "open",
+      acceptedBy: null,
+      acceptedByName: null,
+      createdAt: new Date().toISOString()
+    };
+
+    replacementRequests.push(request);
+
+    alert("تم إرسال طلب البديل.");
+    renderWorkerRequests(currentUserKey);
+    if (currentView === "manager") {
+      renderManagerRequests();
+    }
+  }
+
+  function renderWorkerRequests(usernameKey) {
+    workerRequestsList.innerHTML = "";
+
+    const user = workers[usernameKey];
+    if (!user) return;
+
+    const visibleRequests = replacementRequests.filter(req => {
+      const sameWeek = req.weekStart === getCurrentWeekStartString();
+      if (!sameWeek) return false;
+
+      const isOwnRequest = req.createdBy === usernameKey;
+      const sameRole = req.role === user.role;
+      const notOwnRequest = req.createdBy !== usernameKey;
+
+      return isOwnRequest || (sameRole && notOwnRequest);
+    });
+
+    if (visibleRequests.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "schedule-item";
+      empty.innerHTML = `<div>مافي طلبات حالياً</div>`;
+      workerRequestsList.appendChild(empty);
+      return;
+    }
+
+    visibleRequests.forEach(req => {
+      const item = document.createElement("div");
+      item.className = "schedule-item";
+
+      let actionHtml = "";
+      const isOwnRequest = req.createdBy === usernameKey;
+      const canTake = req.status === "open" && !isOwnRequest && req.role === user.role;
+
+      if (canTake) {
+        actionHtml = `<button type="button" class="take-request-btn" data-id="${req.id}">أنا آخذ هذا اليوم</button>`;
+      } else if (req.status === "accepted") {
+        actionHtml = `<span class="status-badge accepted">تم أخذه</span>`;
+      } else if (isOwnRequest) {
+        actionHtml = `<span class="status-badge pending">طلبك</span>`;
+      }
+
+      item.innerHTML = `
+        <div>
+          <strong>${req.day}</strong><br>
+          <small>صاحب الطلب: ${req.workerName}</small><br>
+          <small>الرول: ${req.role}</small><br>
+          <small>الوقت: ${req.start} - ${req.end}</small><br>
+          <small>المهمة: ${req.note}</small><br>
+          <small>الحالة: ${formatRequestStatus(req)}</small>
+        </div>
+        <div class="action-buttons">
+          ${actionHtml}
+        </div>
+      `;
+
+      workerRequestsList.appendChild(item);
+    });
+
+    attachTakeRequestEvents();
+  }
+
+  function renderManagerRequests() {
+    managerRequestsList.innerHTML = "";
+
+    const currentWeekRequests = replacementRequests.filter(
+      req => req.weekStart === getCurrentWeekStartString()
+    );
+
+    if (currentWeekRequests.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "schedule-item";
+      empty.innerHTML = `<div>مافي طلبات بديل هذا الأسبوع</div>`;
+      managerRequestsList.appendChild(empty);
+      return;
+    }
+
+    currentWeekRequests.forEach(req => {
+      const item = document.createElement("div");
+      item.className = "schedule-item";
+      item.innerHTML = `
+        <div>
+          <strong>${req.day}</strong><br>
+          <small>صاحب الطلب: ${req.workerName}</small><br>
+          <small>الرول: ${req.role}</small><br>
+          <small>الوقت: ${req.start} - ${req.end}</small><br>
+          <small>المهمة: ${req.note}</small><br>
+          <small>الحالة: ${formatRequestStatus(req)}</small>
+        </div>
+      `;
+      managerRequestsList.appendChild(item);
+    });
+  }
+
+  function attachTakeRequestEvents() {
+    document.querySelectorAll(".take-request-btn").forEach(btn => {
+      btn.addEventListener("click", function () {
+        takeReplacementRequest(this.dataset.id);
+      });
+    });
+  }
+
+  function takeReplacementRequest(requestId) {
+    if (!currentUser || !currentUserKey || currentView !== "worker") return;
+
+    const request = replacementRequests.find(req => req.id === requestId);
+    if (!request) return;
+
+    if (request.status !== "open") {
+      alert("هذا الطلب لم يعد متاح.");
+      return;
+    }
+
+    if (request.createdBy === currentUserKey) {
+      alert("ما فيك تاخذ طلبك أنت.");
+      return;
+    }
+
+    if (request.role !== currentUser.role) {
+      alert("هذا الطلب مو من نفس رولك.");
+      return;
+    }
+
+    request.status = "accepted";
+    request.acceptedBy = currentUserKey;
+    request.acceptedByName = currentUser.name;
+
+    alert("تم أخذ هذا اليوم.");
+    renderWorkerRequests(currentUserKey);
+  }
+
+  function formatRequestStatus(request) {
+    if (request.status === "accepted") {
+      return `تم أخذه بواسطة ${request.acceptedByName}`;
+    }
+    return "مفتوح";
+  }
+
   function deleteWorker(usernameKey) {
     const ok = confirm("متأكد بدك تحذف هذا الموظف؟");
     if (!ok) return;
 
     delete workers[usernameKey];
+
+    replacementRequests = replacementRequests.filter(req => {
+      return req.createdBy !== usernameKey && req.acceptedBy !== usernameKey;
+    });
+
     renderWorkersList();
     renderManagerDayOverview(managerDaySelect.value);
+    renderManagerRequests();
   }
 
   function openAddForm() {
@@ -452,6 +729,10 @@ document.addEventListener("DOMContentLoaded", function () {
     username.value = "";
     password.value = "";
     scheduleList.innerHTML = "";
+
+    currentUser = null;
+    currentUserKey = null;
+    currentView = "login";
   }
 
   function buildDaysInputs() {
@@ -568,8 +849,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function getStartOfWeek(date) {
     const newDate = new Date(date);
-    const day = newDate.getDay(); // 0 الأحد
-    const diff = day === 0 ? -6 : 1 - day; // الاثنين بداية الأسبوع
+    const day = newDate.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
     newDate.setDate(newDate.getDate() + diff);
     newDate.setHours(0, 0, 0, 0);
     return newDate;
@@ -589,6 +870,10 @@ document.addEventListener("DOMContentLoaded", function () {
     return `الأسبوع الحالي: ${formatDate(start)} - ${formatDate(end)} (يتجدد كل يوم اثنين)`;
   }
 
+  function getCurrentWeekStartString() {
+    return formatDate(getStartOfWeek(new Date()));
+  }
+
   function getArabicDayName(date) {
     const jsDay = date.getDay();
     const map = {
@@ -601,5 +886,9 @@ document.addEventListener("DOMContentLoaded", function () {
       6: "السبت"
     };
     return map[jsDay];
+  }
+
+  function generateRequestId() {
+    return "req_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
   }
 });
