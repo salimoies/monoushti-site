@@ -19,13 +19,13 @@ document.addEventListener("DOMContentLoaded", function () {
       name: "سليم",
       role: "عامل مطبخ",
       schedule: {
-        الاثنين: { off: false, start: "12:00", end: "20:00", note: "شغل جوا" },
-        الثلاثاء: { off: true, start: "", end: "", note: "" },
-        الأربعاء: { off: false, start: "14:00", end: "22:00", note: "تقطيع" },
-        الخميس: { off: false, start: "12:00", end: "20:00", note: "تطحين" },
-        الجمعة: { off: false, start: "16:00", end: "23:00", note: "شغل جوا" },
-        السبت: { off: false, start: "14:00", end: "22:00", note: "تقطيع" },
-        الأحد: { off: true, start: "", end: "", note: "" }
+        الاثنين: { off: false, start: "12:00", end: "20:00", note: "شغل جوا", crossesMidnight: false },
+        الثلاثاء: { off: true, start: "", end: "", note: "", crossesMidnight: false },
+        الأربعاء: { off: false, start: "14:00", end: "22:00", note: "تقطيع", crossesMidnight: false },
+        الخميس: { off: false, start: "19:00", end: "02:00", note: "شغل جوا", crossesMidnight: true },
+        الجمعة: { off: false, start: "16:00", end: "23:00", note: "شغل جوا", crossesMidnight: false },
+        السبت: { off: false, start: "14:00", end: "22:00", note: "تقطيع", crossesMidnight: false },
+        الأحد: { off: true, start: "", end: "", note: "", crossesMidnight: false }
       }
     },
     ahmad: {
@@ -33,13 +33,13 @@ document.addEventListener("DOMContentLoaded", function () {
       name: "أحمد",
       role: "شوفير",
       schedule: {
-        الاثنين: { off: false, start: "10:00", end: "18:00", note: "توصيل" },
-        الثلاثاء: { off: false, start: "10:00", end: "18:00", note: "توصيل" },
-        الأربعاء: { off: false, start: "10:00", end: "18:00", note: "توصيل" },
-        الخميس: { off: true, start: "", end: "", note: "" },
-        الجمعة: { off: false, start: "12:00", end: "20:00", note: "توصيل" },
-        السبت: { off: false, start: "12:00", end: "20:00", note: "توصيل" },
-        الأحد: { off: true, start: "", end: "", note: "" }
+        الاثنين: { off: false, start: "10:00", end: "18:00", note: "توصيل", crossesMidnight: false },
+        الثلاثاء: { off: false, start: "10:00", end: "18:00", note: "توصيل", crossesMidnight: false },
+        الأربعاء: { off: false, start: "10:00", end: "18:00", note: "توصيل", crossesMidnight: false },
+        الخميس: { off: true, start: "", end: "", note: "", crossesMidnight: false },
+        الجمعة: { off: false, start: "12:00", end: "20:00", note: "توصيل", crossesMidnight: false },
+        السبت: { off: false, start: "12:00", end: "20:00", note: "توصيل", crossesMidnight: false },
+        الأحد: { off: true, start: "", end: "", note: "", crossesMidnight: false }
       }
     }
   };
@@ -139,7 +139,8 @@ document.addEventListener("DOMContentLoaded", function () {
           off: true,
           start: "",
           end: "",
-          note: ""
+          note: "",
+          crossesMidnight: false
         };
       } else {
         const startValue = startSelect.value;
@@ -151,16 +152,21 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
         }
 
-        if (startValue >= endValue) {
-          alert(`وقت البداية لازم يكون قبل وقت النهاية في يوم ${day}`);
+        if (startValue === endValue) {
+          alert(`وقت البداية والنهاية لا يمكن يكونوا نفس الشي في يوم ${day}`);
           return;
         }
+
+        const startMinutes = toMinutes(startValue);
+        const endMinutes = toMinutes(endValue);
+        const crossesMidnight = endMinutes < startMinutes;
 
         schedule[day] = {
           off: false,
           start: startValue,
           end: endValue,
-          note: noteValue
+          note: noteValue,
+          crossesMidnight: crossesMidnight
         };
       }
     }
@@ -217,7 +223,10 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         item.innerHTML = `
           <div>
-            <div><strong>${day}</strong>: ${dayData.start} - ${dayData.end}</div>
+            <div>
+              <strong>${day}</strong>: ${dayData.start} - ${dayData.end}
+              ${dayData.crossesMidnight ? '<span style="color:#f59e0b;"> (ينتهي ثاني يوم)</span>' : ""}
+            </div>
             <small>ملاحظة: ${dayData.note}</small>
           </div>
         `;
@@ -249,9 +258,9 @@ document.addEventListener("DOMContentLoaded", function () {
           <strong>${worker.name}</strong><br>
           <small>${worker.role}</small>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button type="button" data-user="${usernameKey}" class="edit-btn" style="width:auto; padding:10px 14px;">تعديل</button>
-          <button type="button" data-user="${usernameKey}" class="delete-btn" style="background:#c62828; width:auto; padding:10px 14px;">حذف</button>
+        <div class="action-buttons">
+          <button type="button" data-user="${usernameKey}" class="edit-btn">تعديل</button>
+          <button type="button" data-user="${usernameKey}" class="delete-btn">حذف</button>
         </div>
       `;
 
@@ -302,7 +311,13 @@ document.addEventListener("DOMContentLoaded", function () {
     formUsername.disabled = true;
 
     for (const day of days) {
-      const dayData = worker.schedule[day] || { off: true, start: "", end: "", note: "" };
+      const dayData = worker.schedule[day] || {
+        off: true,
+        start: "",
+        end: "",
+        note: "",
+        crossesMidnight: false
+      };
 
       const offCheckbox = document.getElementById(`${day}-off`);
       const startSelect = document.getElementById(`${day}-start`);
@@ -359,16 +374,12 @@ document.addEventListener("DOMContentLoaded", function () {
     for (const day of days) {
       const dayBox = document.createElement("div");
       dayBox.className = "day-box";
-      dayBox.style.marginBottom = "20px";
-      dayBox.style.padding = "15px";
-      dayBox.style.border = "1px solid #333";
-      dayBox.style.borderRadius = "12px";
 
       dayBox.innerHTML = `
         <h4 style="margin-bottom:12px;">${day}</h4>
 
         <label style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-          <input type="checkbox" id="${day}-off" checked />
+          <input type="checkbox" id="${day}-off" checked style="width:auto; margin:0;" />
           عطلة
         </label>
 
@@ -420,9 +431,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function buildOptions(optionsArray) {
     let html = `<option value="">اختر</option>`;
+
     for (const option of optionsArray) {
       html += `<option value="${option}">${option}</option>`;
     }
+
     return html;
   }
 
@@ -448,7 +461,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const hours = Math.floor(totalMinutes / 60)
       .toString()
       .padStart(2, "0");
-    const minutes = (totalMinutes % 60).toString().padStart(2, "0");
+
+    const minutes = (totalMinutes % 60)
+      .toString()
+      .padStart(2, "0");
+
     return `${hours}:${minutes}`;
   }
 
