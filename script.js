@@ -13,7 +13,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const noteOptions = ["توصيل", "تطحين", "تقطيع", "شغل جوا"];
   const timeOptions = generateTimeOptions("00:00", "23:30", 30);
 
-  let workers = {
+  const WORKERS_STORAGE_KEY = "chicki_workers";
+  const REQUESTS_STORAGE_KEY = "chicki_replacement_requests";
+
+  const defaultWorkers = {
     salim: {
       password: "1234",
       name: "سليم",
@@ -58,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  let workers = {};
   let replacementRequests = [];
 
   const managerAccount = {
@@ -111,6 +115,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const managerRequestsList = document.getElementById("managerRequestsList");
 
   let editingWorker = null;
+
+  loadWorkers();
+  loadRequests();
 
   buildDaysInputs();
   buildManagerDaySelect();
@@ -227,7 +234,16 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     if (editingWorker) {
+      const oldRole = workers[editingWorker]?.role || roleValue;
       workers[editingWorker] = workerData;
+
+      if (oldRole !== roleValue) {
+        replacementRequests = replacementRequests.filter(req => {
+          const createdByThisWorker = req.createdBy === editingWorker;
+          const acceptedByThisWorker = req.acceptedBy === editingWorker;
+          return !createdByThisWorker && !acceptedByThisWorker;
+        });
+      }
     } else {
       if (workers[usernameKey]) {
         alert("اسم المستخدم موجود من قبل.");
@@ -236,11 +252,21 @@ document.addEventListener("DOMContentLoaded", function () {
       workers[usernameKey] = workerData;
     }
 
+    saveWorkers();
+    saveRequests();
+
     workerFormCard.classList.add("hidden");
     clearForm();
     renderWorkersList();
     renderManagerDayOverview(managerDaySelect.value);
     renderManagerRequests();
+
+    if (currentView === "worker" && currentUserKey && workers[currentUserKey]) {
+      currentUser = workers[currentUserKey];
+      renderWorkerSchedule(currentUser);
+      buildWorkerRequestDaySelect(currentUser);
+      renderWorkerRequests(currentUserKey);
+    }
   });
 
   logoutBtn.addEventListener("click", logout);
@@ -492,9 +518,11 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     replacementRequests.push(request);
+    saveRequests();
 
     alert("تم إرسال طلب البديل.");
     renderWorkerRequests(currentUserKey);
+
     if (currentView === "manager") {
       renderManagerRequests();
     }
@@ -626,6 +654,8 @@ document.addEventListener("DOMContentLoaded", function () {
     request.acceptedBy = currentUserKey;
     request.acceptedByName = currentUser.name;
 
+    saveRequests();
+
     alert("تم أخذ هذا اليوم.");
     renderWorkerRequests(currentUserKey);
   }
@@ -647,9 +677,16 @@ document.addEventListener("DOMContentLoaded", function () {
       return req.createdBy !== usernameKey && req.acceptedBy !== usernameKey;
     });
 
+    saveWorkers();
+    saveRequests();
+
     renderWorkersList();
     renderManagerDayOverview(managerDaySelect.value);
     renderManagerRequests();
+
+    if (currentView === "worker" && currentUserKey === usernameKey) {
+      logout();
+    }
   }
 
   function openAddForm() {
@@ -891,4 +928,52 @@ document.addEventListener("DOMContentLoaded", function () {
   function generateRequestId() {
     return "req_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
   }
+
+  function saveWorkers() {
+    localStorage.setItem(WORKERS_STORAGE_KEY, JSON.stringify(workers));
+  }
+
+  function loadWorkers() {
+    const savedWorkers = localStorage.getItem(WORKERS_STORAGE_KEY);
+
+    if (savedWorkers) {
+      try {
+        workers = JSON.parse(savedWorkers);
+      } catch (error) {
+        workers = JSON.parse(JSON.stringify(defaultWorkers));
+        saveWorkers();
+      }
+    } else {
+      workers = JSON.parse(JSON.stringify(defaultWorkers));
+      saveWorkers();
+    }
+  }
+
+  function saveRequests() {
+    localStorage.setItem(REQUESTS_STORAGE_KEY, JSON.stringify(replacementRequests));
+  }
+
+  function loadRequests() {
+    const savedRequests = localStorage.getItem(REQUESTS_STORAGE_KEY);
+
+    if (savedRequests) {
+      try {
+        replacementRequests = JSON.parse(savedRequests);
+      } catch (error) {
+        replacementRequests = [];
+        saveRequests();
+      }
+    } else {
+      replacementRequests = [];
+      saveRequests();
+    }
+  }
+
+  function resetAllData() {
+    localStorage.removeItem(WORKERS_STORAGE_KEY);
+    localStorage.removeItem(REQUESTS_STORAGE_KEY);
+    location.reload();
+  }
+
+  window.resetAllData = resetAllData;
 });
