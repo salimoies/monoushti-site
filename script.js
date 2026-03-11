@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const roleOptions = ["مانجر", "شوفير", "عامل مطبخ"];
   const noteOptions = ["توصيل", "تطحين", "تقطيع", "شغل جوا"];
-  const timeOptions = generateTimeOptions("08:00", "23:30", 30);
+  const timeOptions = generateTimeOptions("00:00", "23:30", 30);
 
   let workers = {
     salim: {
