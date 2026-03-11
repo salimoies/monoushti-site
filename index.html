@@ -8,6 +8,7 @@
 </head>
 <body>
   <div class="container">
+
     <div class="card" id="loginCard">
       <h1>جدول الشغل</h1>
       <p class="subtitle">سجّل دخولك حتى تشوف دوامك</p>
@@ -18,8 +19,7 @@
       <label for="password">كلمة المرور</label>
       <input type="password" id="password" placeholder="اكتب كلمة المرور" />
 
-      <button id="loginBtn">دخول</button>
-
+      <button type="button" id="loginBtn">دخول</button>
       <p id="errorMessage" class="error"></p>
     </div>
 
@@ -29,22 +29,9 @@
           <h2 id="welcomeText">أهلًا</h2>
           <p class="subtitle">هذا جدولك الحالي</p>
         </div>
-        <button id="logoutBtn" class="logout-btn">تسجيل خروج</button>
+        <button type="button" id="logoutBtn" class="logout-btn">تسجيل خروج</button>
       </div>
-<div class="card hidden" id="managerCard">
-  <div class="topRow">
-    <div>
-      <h2>لوحة الإدارة</h2>
-      <p class="subtitle">إدارة الموظفين والجداول</p>
-    </div>
-    <button id="managerLogoutBtn" class="logout-btn">تسجيل خروج</button>
-  </div>
 
-  <button id="addWorkerBtn">إضافة موظف</button>
-
-  <div id="workersList" class="schedule-list" style="margin-top: 20px;"></div>
-</div>
-      
       <div class="info-box">
         <p><strong>الاسم:</strong> <span id="workerName"></span></p>
         <p><strong>المنصب:</strong> <span id="workerRole"></span></p>
@@ -54,6 +41,20 @@
       <h3>أيام الدوام</h3>
       <div id="scheduleList" class="schedule-list"></div>
     </div>
+
+    <div class="card hidden" id="managerCard">
+      <div class="topRow">
+        <div>
+          <h2>لوحة الإدارة</h2>
+          <p class="subtitle">إدارة الموظفين والجداول</p>
+        </div>
+        <button type="button" id="managerLogoutBtn" class="logout-btn">تسجيل خروج</button>
+      </div>
+
+      <button type="button" id="addWorkerBtn">إضافة موظف</button>
+      <div id="workersList" class="schedule-list" style="margin-top: 20px;"></div>
+    </div>
+
   </div>
 
   <script src="script.js"></script>
