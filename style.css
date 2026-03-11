@@ -1,75 +1,120 @@
 body {
-  direction: rtl;
-  background: #FAA0A0;
   margin: 0;
   font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  direction: rtl;
+}
+
+.container {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  padding: 20px;
 }
 
-.app {
-  width: 90%;
-  max-width: 700px;
-  text-align: center;
+.card {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
-.character {
-  font-size: 32px;
+.hidden {
+  display: none;
+}
+
+h1, h2, h3 {
+  margin-top: 0;
+}
+
+.subtitle {
+  color: #666;
   margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
   font-weight: bold;
 }
 
-.box {
-  background: white;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  margin-top: 10px;
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
 }
 
-#text {
-  font-size: 22px;
-  margin-bottom: 20px;
-  line-height: 1.7;
-}
-
-#answers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 15px;
-}
-
-#answers button {
-  background: #ff5fa2;
+button {
+  width: 100%;
+  padding: 12px;
   border: none;
-  padding: 12px 18px;
-  border-radius: 12px;
+  border-radius: 10px;
+  background: #111;
   color: white;
   font-size: 16px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-#answers button:hover {
-  background: #ff3c8d;
-  transform: scale(1.05);
+button:hover {
+  opacity: 0.92;
 }
 
-#answers button:active {
-  transform: scale(0.95);
+.error {
+  color: #c62828;
+  margin-top: 12px;
+  min-height: 20px;
 }
 
-#answers input {
-  width: 100%;
-  max-width: 320px;
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.logout-btn {
+  width: auto;
+  background: #c62828;
+  padding: 10px 14px;
+}
+
+.info-box {
+  background: #f7f7f7;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 18px 0;
+}
+
+.info-box p {
+  margin: 8px 0;
+}
+
+.schedule-list {
+  display: grid;
+  gap: 10px;
+}
+
+.schedule-item {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 12px;
   padding: 12px;
-  font-size: 16px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  outline: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.day {
+  font-weight: bold;
+}
+
+.time {
+  color: #333;
 }
