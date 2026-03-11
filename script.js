@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const workerRole = document.getElementById("workerRole");
   const welcomeText = document.getElementById("welcomeText");
   const scheduleList = document.getElementById("scheduleList");
+  const workerWeekText = document.getElementById("workerWeekText");
 
   const logoutBtn = document.getElementById("logoutBtn");
   const managerLogoutBtn = document.getElementById("managerLogoutBtn");
@@ -80,9 +81,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const saveWorkerBtn = document.getElementById("saveWorkerBtn");
   const cancelWorkerBtn = document.getElementById("cancelWorkerBtn");
 
+  const managerDaySelect = document.getElementById("managerDaySelect");
+  const managerDayOverview = document.getElementById("managerDayOverview");
+  const managerWeekText = document.getElementById("managerWeekText");
+
   let editingWorker = null;
 
   buildDaysInputs();
+  buildManagerDaySelect();
 
   loginBtn.addEventListener("click", function () {
     const user = username.value.trim().toLowerCase();
@@ -113,6 +119,10 @@ document.addEventListener("DOMContentLoaded", function () {
   cancelWorkerBtn.addEventListener("click", function () {
     workerFormCard.classList.add("hidden");
     clearForm();
+  });
+
+  managerDaySelect.addEventListener("change", function () {
+    renderManagerDayOverview(this.value);
   });
 
   saveWorkerBtn.addEventListener("click", function () {
@@ -191,6 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
     workerFormCard.classList.add("hidden");
     clearForm();
     renderWorkersList();
+    renderManagerDayOverview(managerDaySelect.value);
   });
 
   logoutBtn.addEventListener("click", logout);
@@ -205,6 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
     welcomeText.innerText = "أهلًا " + worker.name;
     workerName.innerText = worker.name;
     workerRole.innerText = worker.role;
+    workerWeekText.innerText = getWeekRangeText();
 
     scheduleList.innerHTML = "";
 
@@ -223,10 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         item.innerHTML = `
           <div>
-            <div>
-              <strong>${day}</strong>: ${dayData.start} - ${dayData.end}
-              ${dayData.crossesMidnight ? '<span style="color:#f59e0b;"> (ينتهي ثاني يوم)</span>' : ""}
-            </div>
+            <div><strong>${day}</strong>: ${dayData.start} - ${dayData.end}</div>
             <small>ملاحظة: ${dayData.note}</small>
           </div>
         `;
@@ -241,7 +250,10 @@ document.addEventListener("DOMContentLoaded", function () {
     dashboardCard.classList.add("hidden");
     managerCard.classList.remove("hidden");
     workerFormCard.classList.add("hidden");
+
+    managerWeekText.innerText = getWeekRangeText();
     renderWorkersList();
+    renderManagerDayOverview(managerDaySelect.value);
   }
 
   function renderWorkersList() {
@@ -280,12 +292,87 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  function renderManagerDayOverview(selectedDay) {
+    managerDayOverview.innerHTML = "";
+
+    const workingToday = [];
+    const offToday = [];
+
+    for (const usernameKey in workers) {
+      const worker = workers[usernameKey];
+      const dayData = worker.schedule[selectedDay];
+
+      if (!dayData || dayData.off) {
+        offToday.push(worker);
+      } else {
+        workingToday.push({
+          name: worker.name,
+          role: worker.role,
+          start: dayData.start,
+          end: dayData.end,
+          note: dayData.note
+        });
+      }
+    }
+
+    const workingTitle = document.createElement("div");
+    workingTitle.className = "overview-section-title";
+    workingTitle.innerText = `شغالين في ${selectedDay}`;
+    managerDayOverview.appendChild(workingTitle);
+
+    if (workingToday.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "schedule-item";
+      empty.innerHTML = `<div>مافي حدا شغال بهذا اليوم</div>`;
+      managerDayOverview.appendChild(empty);
+    } else {
+      workingToday.forEach(worker => {
+        const item = document.createElement("div");
+        item.className = "schedule-item";
+        item.innerHTML = `
+          <div>
+            <strong>${worker.name}</strong><br>
+            <small>${worker.role} - ${worker.start} إلى ${worker.end}</small><br>
+            <small>المهمة: ${worker.note}</small>
+          </div>
+        `;
+        managerDayOverview.appendChild(item);
+      });
+    }
+
+    const offTitle = document.createElement("div");
+    offTitle.className = "overview-section-title";
+    offTitle.style.marginTop = "10px";
+    offTitle.innerText = `عطلة في ${selectedDay}`;
+    managerDayOverview.appendChild(offTitle);
+
+    if (offToday.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "schedule-item";
+      empty.innerHTML = `<div>مافي حدا عطلة بهذا اليوم</div>`;
+      managerDayOverview.appendChild(empty);
+    } else {
+      offToday.forEach(worker => {
+        const item = document.createElement("div");
+        item.className = "schedule-item";
+        item.innerHTML = `
+          <div>
+            <strong>${worker.name}</strong><br>
+            <small>${worker.role}</small>
+          </div>
+        `;
+        managerDayOverview.appendChild(item);
+      });
+    }
+  }
+
   function deleteWorker(usernameKey) {
     const ok = confirm("متأكد بدك تحذف هذا الموظف؟");
     if (!ok) return;
 
     delete workers[usernameKey];
     renderWorkersList();
+    renderManagerDayOverview(managerDaySelect.value);
   }
 
   function openAddForm() {
@@ -307,7 +394,6 @@ document.addEventListener("DOMContentLoaded", function () {
     formUsername.value = usernameKey;
     formPassword.value = worker.password;
     formRole.value = roleOptions.includes(worker.role) ? worker.role : "عامل مطبخ";
-
     formUsername.disabled = true;
 
     for (const day of days) {
@@ -429,6 +515,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function buildManagerDaySelect() {
+    managerDaySelect.innerHTML = "";
+
+    days.forEach(day => {
+      const option = document.createElement("option");
+      option.value = day;
+      option.textContent = day;
+      managerDaySelect.appendChild(option);
+    });
+
+    managerDaySelect.value = getArabicDayName(new Date());
+  }
+
   function buildOptions(optionsArray) {
     let html = `<option value="">اختر</option>`;
 
@@ -458,18 +557,49 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function toTimeString(totalMinutes) {
-    const hours = Math.floor(totalMinutes / 60)
-      .toString()
-      .padStart(2, "0");
-
-    const minutes = (totalMinutes % 60)
-      .toString()
-      .padStart(2, "0");
-
+    const hours = Math.floor(totalMinutes / 60).toString().padStart(2, "0");
+    const minutes = (totalMinutes % 60).toString().padStart(2, "0");
     return `${hours}:${minutes}`;
   }
 
   function cssEscape(text) {
     return CSS.escape(text);
+  }
+
+  function getStartOfWeek(date) {
+    const newDate = new Date(date);
+    const day = newDate.getDay(); // 0 الأحد
+    const diff = day === 0 ? -6 : 1 - day; // الاثنين بداية الأسبوع
+    newDate.setDate(newDate.getDate() + diff);
+    newDate.setHours(0, 0, 0, 0);
+    return newDate;
+  }
+
+  function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  function getWeekRangeText() {
+    const start = getStartOfWeek(new Date());
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    return `الأسبوع الحالي: ${formatDate(start)} - ${formatDate(end)} (يتجدد كل يوم اثنين)`;
+  }
+
+  function getArabicDayName(date) {
+    const jsDay = date.getDay();
+    const map = {
+      0: "الأحد",
+      1: "الاثنين",
+      2: "الثلاثاء",
+      3: "الأربعاء",
+      4: "الخميس",
+      5: "الجمعة",
+      6: "السبت"
+    };
+    return map[jsDay];
   }
 });
