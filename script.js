@@ -14,7 +14,6 @@ let workers = {
       الأحد: "عطلة"
     }
   },
-
   ahmad: {
     password: "5678",
     name: "أحمد",
@@ -108,7 +107,6 @@ function openManagerPanel() {
   loginCard.classList.add("hidden");
   dashboardCard.classList.add("hidden");
   managerCard.classList.remove("hidden");
-
   renderWorkersList();
 }
 
@@ -127,12 +125,19 @@ function renderWorkersList() {
         <small>${worker.role} - عطلته: ${worker.off}</small>
       </div>
       <div>
-        <button onclick="deleteWorker('${usernameKey}')" style="background:#c62828;">حذف</button>
+        <button type="button" data-user="${usernameKey}" class="delete-btn" style="background:#c62828; width:auto; padding:10px 14px;">حذف</button>
       </div>
     `;
 
     workersList.appendChild(item);
   }
+
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+      const usernameKey = this.dataset.user;
+      deleteWorker(usernameKey);
+    });
+  });
 }
 
 function deleteWorker(usernameKey) {
