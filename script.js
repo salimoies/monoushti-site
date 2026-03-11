@@ -1,4 +1,35 @@
-let workers = {
+[3:55 pm, 11/03/2026] Salim: <div id="workerFormCard" class="card hidden" style="margin-top:20px;">
+  <h3 id="formTitle">إضافة عامل</h3>
+
+  <label>اسم المستخدم</label>
+  <input type="text" id="formUsername" />
+
+  <label>كلمة المرور</label>
+  <input type="text" id="formPassword" />
+
+  <label>الاسم الكامل</label>
+  <input type="text" id="formName" />
+
+  <label>المنصب</label>
+  <input type="text" id="formRole" />
+
+  <label>يوم العطلة</label>
+  <input type="text" id="formOff" />
+
+  <label>الاثنين</label>
+  <input type="text" id="monInput" placeholder="مثال: 12:00 - 20:00 أو عطلة" />
+
+  <label>الثلاثاء</label>
+  <input type="text" id="tueInput" />
+
+  <label>الأربعاء</label>
+  <input type="text" id="wedInput" />
+
+  <label>الخميس</label>
+  <input type="text" id="thuInput" />
+
+  <label>الجمعة</…
+[4:02 pm, 11/03/2026] Salim: let workers = {
   salim: {
     password: "1234",
     name: "سليم",
@@ -54,6 +85,29 @@ const logoutBtn = document.getElementById("logoutBtn");
 const managerLogoutBtn = document.getElementById("managerLogoutBtn");
 const workersList = document.getElementById("workersList");
 
+const addWorkerBtn = document.getElementById("addWorkerBtn");
+const workerFormCard = document.getElementById("workerFormCard");
+const formTitle = document.getElementById("formTitle");
+
+const formUsername = document.getElementById("formUsername");
+const formPassword = document.getElementById("formPassword");
+const formName = document.getElementById("formName");
+const formRole = document.getElementById("formRole");
+const formOff = document.getElementById("formOff");
+
+const monInput = document.getElementById("monInput");
+const tueInput = document.getElementById("tueInput");
+const wedInput = document.getElementById("wedInput");
+const thuInput = document.getElementById("thuInput");
+const friInput = document.getElementById("friInput");
+const satInput = document.getElementById("satInput");
+const sunInput = document.getElementById("sunInput");
+
+const saveWorkerBtn = document.getElementById("saveWorkerBtn");
+const cancelWorkerBtn = document.getElementById("cancelWorkerBtn");
+
+let editingWorker = null;
+
 loginBtn.addEventListener("click", function () {
   const user = username.value.trim().toLowerCase();
   const pass = password.value.trim();
@@ -81,6 +135,7 @@ loginBtn.addEventListener("click", function () {
 function openWorkerDashboard(worker) {
   loginCard.classList.add("hidden");
   managerCard.classList.add("hidden");
+  workerFormCard.classList.add("hidden");
   dashboardCard.classList.remove("hidden");
 
   welcomeText.innerText = "أهلًا " + worker.name;
@@ -107,6 +162,8 @@ function openManagerPanel() {
   loginCard.classList.add("hidden");
   dashboardCard.classList.add("hidden");
   managerCard.classList.remove("hidden");
+  workerFormCard.classList.add("hidden");
+
   renderWorkersList();
 }
 
@@ -124,7 +181,8 @@ function renderWorkersList() {
         <strong>${worker.name}</strong><br>
         <small>${worker.role} - عطلته: ${worker.off}</small>
       </div>
-      <div>
+      <div style="display:flex; gap:8px;">
+        <button type="button" data-user="${usernameKey}" class="edit-btn" style="width:auto; padding:10px 14px;">تعديل</button>
         <button type="button" data-user="${usernameKey}" class="delete-btn" style="background:#c62828; width:auto; padding:10px 14px;">حذف</button>
       </div>
     `;
@@ -138,6 +196,13 @@ function renderWorkersList() {
       deleteWorker(usernameKey);
     });
   });
+
+  document.querySelectorAll(".edit-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+      const usernameKey = this.dataset.user;
+      openEditForm(usernameKey);
+    });
+  });
 }
 
 function deleteWorker(usernameKey) {
@@ -148,12 +213,111 @@ function deleteWorker(usernameKey) {
   renderWorkersList();
 }
 
+function clearForm() {
+  formUsername.value = "";
+  formPassword.value = "";
+  formName.value = "";
+  formRole.value = "";
+  formOff.value = "";
+  monInput.value = "";
+  tueInput.value = "";
+  wedInput.value = "";
+  thuInput.value = "";
+  friInput.value = "";
+  satInput.value = "";
+  sunInput.value = "";
+}
+
+function openAddForm() {
+  editingWorker = null;
+  formTitle.innerText = "إضافة عامل";
+  clearForm();
+  formUsername.disabled = false;
+  workerFormCard.classList.remove("hidden");
+}
+
+function openEditForm(usernameKey) {
+  const worker = workers[usernameKey];
+  if (!worker) return;
+
+  editingWorker = usernameKey;
+  formTitle.innerText = "تعديل عامل";
+
+  formUsername.value = usernameKey;
+  formPassword.value = worker.password;
+  formName.value = worker.name;
+  formRole.value = worker.role;
+  formOff.value = worker.off;
+
+  monInput.value = worker.schedule["الاثنين"] || "";
+  tueInput.value = worker.schedule["الثلاثاء"] || "";
+  wedInput.value = worker.schedule["الأربعاء"] || "";
+  thuInput.value = worker.schedule["الخميس"] || "";
+  friInput.value = worker.schedule["الجمعة"] || "";
+  satInput.value = worker.schedule["السبت"] || "";
+  sunInput.value = worker.schedule["الأحد"] || "";
+
+  formUsername.disabled = true;
+  workerFormCard.classList.remove("hidden");
+}
+
+addWorkerBtn.addEventListener("click", openAddForm);
+
+cancelWorkerBtn.addEventListener("click", function () {
+  workerFormCard.classList.add("hidden");
+  clearForm();
+});
+
+saveWorkerBtn.addEventListener("click", function () {
+  const usernameKey = formUsername.value.trim().toLowerCase();
+  const passwordValue = formPassword.value.trim();
+  const nameValue = formName.value.trim();
+  const roleValue = formRole.value.trim();
+  const offValue = formOff.value.trim();
+
+  if (!usernameKey || !passwordValue || !nameValue) {
+    alert("عبي اسم المستخدم وكلمة المرور والاسم.");
+    return;
+  }
+
+  const workerData = {
+    password: passwordValue,
+    name: nameValue,
+    role: roleValue,
+    off: offValue,
+    schedule: {
+      الاثنين: monInput.value.trim(),
+      الثلاثاء: tueInput.value.trim(),
+      الأربعاء: wedInput.value.trim(),
+      الخميس: thuInput.value.trim(),
+      الجمعة: friInput.value.trim(),
+      السبت: satInput.value.trim(),
+      الأحد: sunInput.value.trim()
+    }
+  };
+
+  if (editingWorker) {
+    workers[editingWorker] = workerData;
+  } else {
+    if (workers[usernameKey]) {
+      alert("اسم المستخدم موجود من قبل.");
+      return;
+    }
+    workers[usernameKey] = workerData;
+  }
+
+  workerFormCard.classList.add("hidden");
+  clearForm();
+  renderWorkersList();
+});
+
 logoutBtn.addEventListener("click", logout);
 managerLogoutBtn.addEventListener("click", logout);
 
 function logout() {
   dashboardCard.classList.add("hidden");
   managerCard.classList.add("hidden");
+  workerFormCard.classList.add("hidden");
   loginCard.classList.remove("hidden");
 
   username.value = "";
