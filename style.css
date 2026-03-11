@@ -259,3 +259,22 @@ button:active {
     width: 100%;
   }
 }
+.week-text {
+  color: #9fb0c7;
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+.manager-overview-box {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 18px;
+  background: #111720;
+  border: 1px solid #273140;
+}
+
+.overview-section-title {
+  font-weight: bold;
+  color: #ffffff;
+  margin: 6px 0 10px;
+}
