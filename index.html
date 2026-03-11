@@ -30,6 +30,7 @@
         <div>
           <h2 id="welcomeText">أهلًا</h2>
           <p class="subtitle">هذا جدولك الحالي</p>
+          <p id="workerWeekText" class="week-text"></p>
         </div>
         <button type="button" id="logoutBtn" class="logout-btn">تسجيل خروج</button>
       </div>
@@ -49,12 +50,24 @@
         <div>
           <h2>لوحة الإدارة</h2>
           <p class="subtitle">إدارة الموظفين والجداول</p>
+          <p id="managerWeekText" class="week-text"></p>
         </div>
         <button type="button" id="managerLogoutBtn" class="logout-btn">تسجيل خروج</button>
       </div>
 
       <button type="button" id="addWorkerBtn">إضافة عامل</button>
-      <div id="workersList" class="schedule-list" style="margin-top: 20px;"></div>
+
+      <div class="manager-overview-box">
+        <h3>مين شغال اليوم؟</h3>
+
+        <label for="managerDaySelect">اختر اليوم</label>
+        <select id="managerDaySelect"></select>
+
+        <div id="managerDayOverview" class="schedule-list" style="margin-top: 14px;"></div>
+      </div>
+
+      <h3 style="margin-top: 24px;">قائمة الموظفين</h3>
+      <div id="workersList" class="schedule-list" style="margin-top: 14px;"></div>
     </div>
 
     <!-- فورم إضافة / تعديل عامل -->
